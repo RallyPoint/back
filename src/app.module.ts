@@ -1,18 +1,16 @@
 import { Module } from '@nestjs/common';
 import { StatusController } from './status.controller';
 import { AppService } from './app.service';
-import { AuthModule } from './auth/auth.module';
-import { GameModule } from './game/game.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { configService } from './share/config/config.service';
-import { UserModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
     AuthModule,
-    GameModule,
-    UserModule
+    UsersModule,
   ],
   controllers: [StatusController],
   providers: [AppService],

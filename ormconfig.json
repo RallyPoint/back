@@ -14,5 +14,5 @@
   "port": 3306,
   "username": "root",
   "password": "",
-  "database": "check"
+  "database": "rallyPoint"
 }
