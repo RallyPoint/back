@@ -1,0 +1,14 @@
+{
+    "auth0": {
+        "PORT": 7000,
+        "AUTH0_DOMAIN" : "https://dev-trhy744w.eu.auth0.com/",
+        "AUTH0_AUDIENCE" : "https://check.com"
+    },
+    "mysql": {
+        "host": "localhost",
+        "port": 3306,
+        "username": "root",
+        "password": "",
+        "database": "rallyPoint"
+    }
+}
