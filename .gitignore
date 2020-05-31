@@ -2,6 +2,12 @@
 /dist
 /node_modules
 
+# Local Config
+/config/local.json
+
+# Docker FS
+/db
+
 # Logs
 logs
 *.log
