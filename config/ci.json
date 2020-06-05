@@ -1,0 +1,18 @@
+{
+    "mysql": {
+        "host": "%MYSQL_HOST%",
+        "port": %MYSQL_PORT%,
+        "username": "%MYSQL_USER%",
+        "logging": false,
+        "password": "%MYSQL_PASSWORD%",
+        "synchronize": false,
+        "database": "%MYSQL_DATABASE%"
+    },
+    "OAuth": {
+        "github": {
+            "clientID": "%GITHUB_ID%",
+            "clientSecret": "%GITHUB_SECRET%",
+            "callbackURL": "http://127.0.0.1:3000/auth/github/callback"
+        }
+    }
+}

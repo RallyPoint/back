@@ -1,5 +1,3 @@
-
-
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import * as config from 'config';
 
@@ -7,6 +5,7 @@ class ConfigService {
   constructor() { }
 
   public getTypeOrmConfig(): TypeOrmModuleOptions {
+      console.log("toto",config.get('mysql'));
     return {
         type: "mysql",
         entities: ["dist/**/*.entity{.ts,.js}"],

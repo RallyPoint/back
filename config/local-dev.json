@@ -1,0 +1,16 @@
+{
+    "mysql": {
+        "host": "db",
+        "port": 3306,
+        "username": "user",
+        "password": "password",
+        "database": "rallypoint"
+    },
+    "OAuth": {
+        "github": {
+            "clientID": "4ba2522ac3257f9dfac3",
+            "clientSecret": "0e311c95fa681773ce49b8d67df73ad46a0e097b",
+            "callbackURL": "http://127.0.0.1:3000/auth/github/callback"
+        }
+    }
+}

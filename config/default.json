@@ -1,10 +1,10 @@
 {
     "mysql": {
-        "host": "localhost",
+        "host": "db",
         "port": 3306,
         "username": "root",
         "password": "",
-        "database": "rallyPoint"
+        "database": "rallypoint"
     },
     "OAuth": {
         "github": {
