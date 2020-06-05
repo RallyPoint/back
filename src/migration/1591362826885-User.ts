@@ -23,4 +23,3 @@ export class User1591362826885 implements MigrationInterface {
 
 																						    }
 
-

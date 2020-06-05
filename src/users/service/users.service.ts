@@ -5,13 +5,17 @@ import { UserDto } from '../dto/user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../entity/user.entity';
 import { Repository } from 'typeorm';
+import {StringTools} from "../../share/tools/string-tools";
 
 @Injectable()
 export class UsersService {
+
+  public static readonly LIVE_KEY_LENGTH = 32;
+
   constructor(@InjectRepository(UserEntity) private usersRepository: Repository<UserEntity>) { }
 
 
-  async findOneByEmail(email: string): Promise<any | undefined> {
+  public async findOneByEmail(email: string): Promise<UserEntity> {
     const user: UserEntity = await this.usersRepository.findOne({
       where: [{email}]
     });
@@ -21,7 +25,7 @@ export class UsersService {
     return user;
   }
 
-  async findOneByGithubUserName(githubUserName: string): Promise<any | undefined> {
+  public async findOneByGithubUserName(githubUserName: string): Promise<UserEntity> {
     const user: UserEntity = await this.usersRepository.findOne({
       where: [{githubUserName}]
     });
@@ -31,17 +35,27 @@ export class UsersService {
     return user;
   }
 
-  async create(createUserDto: CreateUserDto): Promise<any> {
-    return await this.usersRepository.save(createUserDto);
+  public async create(createUserDto: CreateUserDto): Promise<UserEntity> {
+    return await this.usersRepository.save({
+      ...createUserDto,
+      liveKey : StringTools.generateKey(UsersService.LIVE_KEY_LENGTH)
+    });
   }
 
-  toUserDto(user: any): UserDto {
-    return {
-      email: user.email,
-      firstName: user.firstname,
-      lastName: user.lastName,
-      githubUserName: user.githubUserName,
-    };
+  public async setLive(user: UserEntity,liveStatus:boolean){
+    await this.usersRepository.update(user,{liveStatus})
   }
+
+  public async findOneByLiveKeyUserName(liveKey: string): Promise<UserEntity> {
+    const user: UserEntity = await this.usersRepository.findOne({
+      where: [{liveKey}]
+    });
+    if (!user) {
+      throw new NotFoundException(`User with liveKey ${liveKey} not found`);
+    }
+    return user;
+  }
+
+
 }
 
