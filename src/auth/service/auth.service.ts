@@ -1,7 +1,8 @@
 
 import { Injectable } from '@nestjs/common';
-import { UsersService } from '../../users/users.service';
+import { UsersService } from '../../users/service/users.service';
 import { JwtService } from '@nestjs/jwt';
+import { CreateUserDto } from 'src/users/dto/user.dto';
 
 @Injectable()
 export class AuthService {
@@ -11,7 +12,7 @@ export class AuthService {
   ) {}
 
   async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.usersService.findOne(username);
+    const user = await this.usersService.findOneByEmail(username);
     if (user && user.password === pass) {
       const { password, ...result } = user;
       return result;
@@ -19,8 +20,17 @@ export class AuthService {
     return null;
   }
 
+  async findUserByGithubUserName(githubUserName: string): Promise<any> {
+    return await this.usersService.findOneByGithubUserName(githubUserName);
+  }
+
+  async register(createUserDto: CreateUserDto): Promise<any> {
+    const user = await this.usersService.create(createUserDto);
+    return this.login(user);
+  }
+
   async login(user: any) {
-    const payload = { username: user.username, sub: user.userId };
+    const payload = { userId: user.id };
     return {
       access_token: this.jwtService.sign(payload),
     };

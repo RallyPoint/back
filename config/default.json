@@ -5,5 +5,12 @@
         "username": "root",
         "password": "",
         "database": "rallyPoint"
+    },
+    "OAuth": {
+        "github": {
+            "clientID": "",
+            "clientSecret": "",
+            "callbackURL": ""
+        }
     }
 }

@@ -2,19 +2,35 @@
 import { Strategy } from 'passport-github';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { VerifyCallback } from 'passport-jwt';
+import * as config from 'config';
+import { AuthService } from '../service/auth.service';
 
 @Injectable()
 export class GithubStrategy extends PassportStrategy(Strategy) {
-  constructor() {
+  constructor(private authService: AuthService) {
     super({
-      clientID: "4ba2522ac3257f9dfac3",
-      clientSecret: "0e311c95fa681773ce49b8d67df73ad46a0e097b",
-      callbackURL: "http://127.0.0.1:3000/auth/github/callback"
+      ...config.get('OAuth').github
     });
   }
 
   async validate (accessToken, refreshToken, profile, cb) {
-    return profile;
+    if (!profile) {
+      throw new UnauthorizedException();
+    }
+    let user = null;
+    try {
+      user = await this.authService.findUserByGithubUserName(profile.username);
+      return this.authService.login(user);
+    }
+    catch (error) {
+      return await this.authService.register({
+        githubUserName: profile.username,
+        email: null,
+        firstName: null,
+        lastName: null,
+        password: null
+      });
+    }
   }
+
 }
