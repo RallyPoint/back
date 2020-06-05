@@ -10,7 +10,7 @@
     "migrationsDir": "src/migration"
   },
   "synchronize": false,
-  "host": "localhost",
+  "host": "db",
   "port": 3306,
   "username": "user",
   "password": "password",
