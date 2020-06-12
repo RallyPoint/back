@@ -5,13 +5,11 @@ export class UserDto {
   @IsEmail()
   email: string;
 
-  firstName: string;
-
-  lastName: string;
-
-  githubUserName: string;
+  @IsNotEmpty()
+  pseudo: string;
 }
 
 export class CreateUserDto extends UserDto {
+  @IsNotEmpty()
   password: string;
 }

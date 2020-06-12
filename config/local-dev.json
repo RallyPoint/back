@@ -6,11 +6,22 @@
         "password": "password",
         "database": "rallypoint"
     },
+    "api": {
+        "github" : {
+            "endpoint" : "https://api.github.com/"
+        }
+    },
+    "cert": {
+        "jwt" : {
+            "private" : "./config/cert/local.key"
+        }
+    },
     "OAuth": {
         "github": {
-            "clientID": "4ba2522ac3257f9dfac3",
-            "clientSecret": "451618e3b4618c881297ce17262e4bdd9ddb11ce",
-            "callbackURL": "http://127.0.0.1:3000/auth/github/callback"
+            "endpoint" : "https://github.com/",
+            "clientID": "4b64a6e73596ba9eac5f",
+            "clientSecret": "9cfd3ac2b91e7c041aafde0d518cd8731a6ce520",
+            "callbackURL": "http://127.0.0.1:9090/auth/github/callback"
         }
     }
 }

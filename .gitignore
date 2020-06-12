@@ -3,7 +3,7 @@
 /node_modules
 
 # Local Config
-/config/local.json
+/config/local-dev.json
 
 # Docker FS
 /db

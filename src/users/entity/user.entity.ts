@@ -1,24 +1,41 @@
 import {
     Entity,
-    PrimaryGeneratedColumn,
     Column,
     BeforeInsert,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { BaseEntity } from '../../share/entity/base.entity';
+import {classToPlain, Exclude} from "class-transformer";
+import {SSO_TYPE, USER_ROLE} from "../../auth/constants";
 
 @Entity()
 export class UserEntity extends BaseEntity {
-    @Column({ type: 'varchar' }) email: string;
-    @Column({ type: 'varchar' }) firstName: string;
-    @Column({ type: 'varchar' }) lastName: string;
-    @Column({ type: 'varchar' }) password: string;
-    @Column({ type: 'varchar', length: 32 }) liveKey: string;
-    @Column({ type: 'boolean'}) liveStatus: boolean;
-    @Column({ type: 'varchar', unique: true }) githubUserName: string;
+    @Column({ type: 'varchar' })
+    email: string;
+    @Exclude({ toPlainOnly: true })
+    @Column({ type: 'varchar' })
+    pseudo: string;
+    @Exclude({ toPlainOnly: true })
+    @Column({ type: 'varchar' })
+    firstName: string;
+    @Column({ type: 'varchar' })
+    lastName: string;
+    @Exclude({ toPlainOnly: true })
+    @Column({ type: 'varchar' })
+    password: string;
+    @Exclude({ toPlainOnly: true })
+    @Column({ type: 'varchar', length: 32 })
+    liveKey: string;
+    @Column({ type: 'boolean', default: false})
+    liveStatus: boolean;
+    @Column({ type: 'enum',enum: SSO_TYPE}) // @todo : MIGRATE TO ENUM SSO_TYPE
+    sso: SSO_TYPE;
+    @Column({ type: 'varchar', length: 32 })
+    ssoId: string;
+    @Column({ type: 'simple-array'})
+    roles: USER_ROLE[];
 
-    @BeforeInsert()
-    async hashPassword() {
-        this.password = await bcrypt.hash(this.password, 10);
+    public toJSON(){
+        return classToPlain(this);
     }
 }
