@@ -1,0 +1,35 @@
+{
+    "mysql": {
+        "host": "mysql.prod.svc.cluster.local",
+        "port": 3306,
+        "username": "rallypoint",
+        "password": "NSGJtzeV7hUMXuKw",
+        "database": "rallypoint"
+    },
+    "mailJet": {
+        "apiKey" : "be80bc61821f065a79cdbcc405cf23b3",
+        "apiSecret" : "24f67612acd4971d95161365ab969b0f"
+    },
+    "stripe": {
+        "publicKey": "pk_test_51Gv1iFJTmy5t31WCrbpoQvPhQnxHHxJkf4WYZqpLkQypyWYMV3dZoQIAYxNCO32CZOZhJHfZ5RfC35XpY9G08eBW007uxZyvSR",
+        "secretKey": "sk_test_51Gv1iFJTmy5t31WCWa6vb3b9365wZILGCSeR8BN1kRCXFPZZmtbP7wiWpyuMG7Wv5Ehyb9dZxCiHmTIvCgZMsTs400fsux7bvU"
+    },
+    "api": {
+        "github" : {
+            "endpoint" : "https://api.github.com/"
+        }
+    },
+    "cert": {
+        "jwt" : {
+            "private" : "./config/cert/local.key"
+        }
+    },
+    "OAuth": {
+        "github": {
+            "endpoint" : "https://github.com/",
+            "clientID": "4b64a6e73596ba9eac5f",
+            "clientSecret": "1e2f0cf5353845c3da6b62264ceb8a6060eef6d3",
+            "callbackURL": "http://127.0.0.1:9090/auth/github/callback"
+        }
+    }
+}

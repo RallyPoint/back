@@ -1,41 +1,48 @@
 import {
     Entity,
     Column,
-    BeforeInsert,
+    ManyToMany, OneToOne, JoinColumn, Index, JoinTable,
 } from 'typeorm';
-import * as bcrypt from 'bcrypt';
 import { BaseEntity } from '../../share/entity/base.entity';
-import {classToPlain, Exclude} from "class-transformer";
 import {SSO_TYPE, USER_ROLE} from "../../auth/constants";
+import {LiveEntity} from "./live.entity";
 
 @Entity()
-export class UserEntity extends BaseEntity {
-    @Column({ type: 'varchar' })
-    email: string;
-    @Exclude({ toPlainOnly: true })
-    @Column({ type: 'varchar' })
-    pseudo: string;
-    @Exclude({ toPlainOnly: true })
-    @Column({ type: 'varchar' })
-    firstName: string;
-    @Column({ type: 'varchar' })
-    lastName: string;
-    @Exclude({ toPlainOnly: true })
-    @Column({ type: 'varchar' })
-    password: string;
-    @Exclude({ toPlainOnly: true })
-    @Column({ type: 'varchar', length: 32 })
-    liveKey: string;
-    @Column({ type: 'boolean', default: false})
-    liveStatus: boolean;
-    @Column({ type: 'enum',enum: SSO_TYPE}) // @todo : MIGRATE TO ENUM SSO_TYPE
-    sso: SSO_TYPE;
-    @Column({ type: 'varchar', length: 32 })
-    ssoId: string;
-    @Column({ type: 'simple-array'})
-    roles: USER_ROLE[];
+export class UserEntity extends BaseEntity<UserEntity> {
 
-    public toJSON(){
-        return classToPlain(this);
-    }
+    @Column({type: 'varchar'})
+    email: string;
+    @Index()
+    @Column({type: 'varchar'})
+    pseudo: string;
+    @Column({type: 'varchar'})
+    firstName: string;
+    @Column({type: 'varchar'})
+    lastName: string;
+    @Column({type: 'varchar'})
+    password: string;
+    @Index()
+    @Column({type: 'enum', enum: SSO_TYPE})
+    sso: SSO_TYPE;
+    @Column({type: 'varchar', length: 32})
+    @Index()
+    ssoId: string;
+    @Column({type: 'simple-array'})
+    roles: USER_ROLE[];
+    @Index()
+    @Column({type: 'varchar', length: 32, default:null, nullable: true})
+    pendingVerification: string;
+    @Index()
+    @Column({type: 'varchar', length: 32, default:null, nullable: true})
+    pendingPassword: string;
+    @ManyToMany(type => UserEntity)
+    @JoinTable()
+    followeds: UserEntity[];
+    @ManyToMany(type => UserEntity)
+    @JoinTable()
+    followers: UserEntity[];
+    @OneToOne(type => LiveEntity)
+    @JoinColumn()
+    live: LiveEntity;
+
 }

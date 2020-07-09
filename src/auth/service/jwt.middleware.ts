@@ -17,6 +17,7 @@ export class JwtMiddleware implements NestMiddleware {
             const authHeaders = req.headers.authorization;
             if (authHeaders) {
                 const token = (authHeaders as string).split(' ')[1] || (authHeaders as string);
+                console.log("=>",token);
                 if (!this.jwtService.verify(token)) {
                     throw new UnauthorizedException(`Invalid Token: ${token}`);
                 }

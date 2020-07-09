@@ -1,20 +1,19 @@
 
 import { Injectable } from '@nestjs/common';
-import { UsersService } from '../../users/service/users.service';
+import { UserService } from '../../users/service/user.service';
 import { JwtService } from '@nestjs/jwt';
 import {UserEntity} from "../../users/entity/user.entity";
 import {JwtModel} from "../model/jwt.model";
-import {USER_ROLE} from "../constants";
 
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UsersService,
+    private usersService: UserService,
     private jwtService: JwtService
   ) {}
 
-  async validateUser(username: string, password: string): Promise<UserEntity> {
-    const user: UserEntity = await this.usersService.findOneByEmail(username);
+  async validateUser(email: string, password: string): Promise<UserEntity> {
+    const user: UserEntity = await this.usersService.findOneByEmail(email);
     if (user && this.usersService.comparePassword(password,user.password)) {
       return user;
     }

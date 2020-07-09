@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "fullname" . }}-clusteip
+  labels:
+    app: {{ .Chart.Name }}-clusteip
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ .Chart.Name }}

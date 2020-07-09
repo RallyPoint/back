@@ -1,4 +1,15 @@
 {
+    "rallypointtech": {
+        "baseUrl": "http://127.0.0.1:4200/"
+    },
+    "mailJet": {
+        "apiKey" : "",
+        "apiSecret" : ""
+    },
+    "stripe": {
+        "publicKey": "",
+        "secretKey": ""
+    },
     "mysql": {
         "host": "db",
         "port": 3306,

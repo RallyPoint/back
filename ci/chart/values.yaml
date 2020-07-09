@@ -1,0 +1,14 @@
+# Default values for checkfront.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+image:
+  repository: rallypointtech/back
+  tag: latest
+
+imagePullSecrets: []
+
+ENV_CONFIG: "prod"
+
+env:
+  NODE_ENV: "prod"

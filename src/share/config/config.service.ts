@@ -12,7 +12,8 @@ class ConfigService {
         cli: {
             "migrationsDir": "src/migration"
         },
-        synchronize: false,
+        synchronize: true,
+        logging: true,
         ...config.get('mysql')
     }
   }

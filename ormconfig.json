@@ -9,7 +9,8 @@
   "cli": {
     "migrationsDir": "src/migration"
   },
-  "synchronize": false,
+  "synchronize": true,
+  "logging": true,
   "host": "db",
   "port": 3306,
   "username": "user",

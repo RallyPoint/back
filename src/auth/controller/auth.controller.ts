@@ -1,19 +1,35 @@
-import {Body, Controller, Get, HttpException, HttpStatus, Post} from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Post
+} from '@nestjs/common';
 import {AuthService} from '../service/auth.service';
-import {CreateUserDto} from '../../users/dto/user.dto';
+import {CreateUserDto, UserResponseDto} from '../../users/dto/user.dto';
 import {GithubService} from "../service/github.service";
-import {UsersService} from "../../users/service/users.service";
+import {UserService} from "../../users/service/user.service";
 import {UserEntity} from "../../users/entity/user.entity";
 import {SSO_TYPE, USER_ROLE} from "../constants";
 import {Roles} from "../decorator/roles.decorator";
+import {LoginDto} from "../dto/loginDto";
+import {githubDto} from "../dto/githubDto";
+import {ResetPasswordDto} from "../dto/ResetPasswordDto";
+import {AuthentificationResponseDto} from "../dto/CreateUserResponseDto";
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService, private readonly githubService: GithubService, private readonly userService: UsersService) {}
+  constructor(private authService: AuthService, private readonly githubService: GithubService, private readonly userService: UserService) {}
 
+
+  @Post('resetPassword')
+  public async resetPassword(@Body() body: ResetPasswordDto): Promise<Boolean>{
+    return this.userService.createResetPassword(body.email);
+  }
 
   @Post('github-login')
-  public async githubLogin(@Body() body: {code:string, email?: string}): Promise<{ access_token: string }>{
+  public async githubLogin(@Body() body: githubDto): Promise<AuthentificationResponseDto>{
     let data = await this.githubService.getUser(body.code);
     let user: UserEntity;
     try {
@@ -29,7 +45,6 @@ export class AuthController {
       try {
         // Inscription
         user = await this.userService.findOneByEmail(data.email,SSO_TYPE.GITHUB);
-        return {access_token: this.authService.generateToken(user)};
       }catch (e) {
         user = await this.userService.create(
             data.email,
@@ -42,23 +57,25 @@ export class AuthController {
         );
       }
     }
-    return {access_token:this.authService.generateToken(user)};
+    return new AuthentificationResponseDto({
+      user: user,
+      access_token: this.authService.generateToken(user)
+    });
   }
 
 
   @Post('login')
-  async login(@Body() body: any) {
-    const user: UserEntity =  await this.authService.validateUser(body.user,body.password);
-    return {
-      access_token : this.authService.generateToken(user),
-      user
-    };
+  async login(@Body() body: LoginDto): Promise<AuthentificationResponseDto> {
+    const user: UserEntity =  await this.authService.validateUser(body.email,body.password);
+    return new AuthentificationResponseDto({
+      user: user,
+      access_token: this.authService.generateToken(user)
+    });
   }
 
   @Post('register')
-  async register(@Body() data: CreateUserDto) {
-
-    return this.userService.create(
+   async register(@Body() data: CreateUserDto): Promise<AuthentificationResponseDto> {
+    const user: UserEntity = await this.userService.create(
         data.email,
         data.pseudo,
         "",
@@ -66,6 +83,11 @@ export class AuthController {
         SSO_TYPE.LOCAL,
         data.password
     );
+    return new AuthentificationResponseDto({
+      user: <UserResponseDto>user,
+      access_token: this.authService.generateToken(user)
+  });
+
   }
 
   @Roles([USER_ROLE.USER])
