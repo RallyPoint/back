@@ -30,7 +30,7 @@ helm upgrade --install \
   --set ENV_CONFIG="$KUBE_NAMESPACE" \
   --namespace="$KUBE_NAMESPACE" \
   "$name" \
-  ci/chart/ --force
+  ci/chart/
 
 
 echo "END"
