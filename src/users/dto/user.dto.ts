@@ -69,6 +69,8 @@ export class UserResponseDto {
   @Expose()
   pseudo: string;
   @Expose()
+  avatar: string;
+  @Expose()
   sso: SSO_TYPE;
   @Expose()
   roles: USER_ROLE[];
