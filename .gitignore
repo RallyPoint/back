@@ -1,6 +1,7 @@
 # compiled output
 /dist
 /node_modules
+/media
 
 # Local Config
 config/local-dev.json

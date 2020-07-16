@@ -36,6 +36,6 @@
         }
     },
     "fs" : {
-        "avatar" : "./media/avatar"
+        "avatar" : "/media/avatar"
     }
 }
