@@ -4,7 +4,7 @@ import {
   Get,
   HttpException,
   HttpStatus,
-  Post
+  Post, UnauthorizedException
 } from '@nestjs/common';
 import {AuthService} from '../service/auth.service';
 import {CreateUserDto, UserResponseDto} from '../../users/dto/user.dto';
@@ -12,11 +12,12 @@ import {GithubService} from "../service/github.service";
 import {UserService} from "../../users/service/user.service";
 import {UserEntity} from "../../users/entity/user.entity";
 import {SSO_TYPE, USER_ROLE} from "../constants";
-import {Roles} from "../decorator/roles.decorator";
 import {LoginDto} from "../dto/loginDto";
 import {githubDto} from "../dto/githubDto";
 import {ResetPasswordDto} from "../dto/ResetPasswordDto";
 import {AuthentificationResponseDto} from "../dto/CreateUserResponseDto";
+import {JwtModel} from "../model/jwt.model";
+import {JwtPayload} from "../decorator/jwt-payload.decorator";
 
 @Controller('auth')
 export class AuthController {
@@ -74,7 +75,7 @@ export class AuthController {
   }
 
   @Post('register')
-   async register(@Body() data: CreateUserDto): Promise<AuthentificationResponseDto> {
+  async register(@Body() data: CreateUserDto): Promise<AuthentificationResponseDto> {
     const user: UserEntity = await this.userService.create(
         data.email,
         data.pseudo,
@@ -86,13 +87,15 @@ export class AuthController {
     return new AuthentificationResponseDto({
       user: <UserResponseDto>user,
       access_token: this.authService.generateToken(user)
-  });
+    });
 
   }
-
-  @Roles([USER_ROLE.USER])
-  @Get('test')
-  public test(){
-    return { test: "test"};
+  @Post('refresh')
+  async refresh(@JwtPayload() jwtPayload: JwtModel): Promise<AuthentificationResponseDto> {
+    const user: UserEntity = await this.userService.getById(jwtPayload.id);
+    return new AuthentificationResponseDto({
+      user: <UserResponseDto>user,
+      access_token: this.authService.generateToken(user)
+    });
   }
 }

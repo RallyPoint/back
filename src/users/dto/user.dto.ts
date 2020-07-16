@@ -1,7 +1,7 @@
-import {IsNotEmpty, IsEmail, Matches, IsString} from 'class-validator';
+import {IsNotEmpty, IsEmail, Matches, IsString, IsOptional} from 'class-validator';
 import {Exclude, Expose, Type} from "class-transformer";
 import {SSO_TYPE, USER_ROLE} from "../../auth/constants";
-import {LiveResponseDto} from "./live.dto";
+import {LiveFullResponseDto, LiveResponseDto} from "./live.dto";
 
 export class UserDto {
   @IsNotEmpty()
@@ -38,6 +38,25 @@ export class UserFollowDto {
 }
 
 
+export class UserUpdateDto {
+  @IsString()
+  @IsOptional()
+  @IsNotEmpty()
+  email?: string;
+  @IsString()
+  @IsOptional()
+  @IsNotEmpty()
+  pseudo?: string;
+  @IsString()
+  @IsOptional()
+  @IsNotEmpty()
+  password: string;
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  passwordConf: string;
+}
+
 @Exclude()
 export class UserResponseDto {
 
@@ -56,4 +75,20 @@ export class UserResponseDto {
   @Expose()
   @Type(()=>LiveResponseDto)
   live?: LiveResponseDto
+}
+@Exclude()
+export class UserFullResponseDto extends UserResponseDto{
+
+  constructor(data: UserResponseDto) {
+    super(data);
+  }
+
+
+  @Expose()
+  email: string;
+
+  @Expose()
+  @Type(()=>LiveFullResponseDto)
+  live?: LiveFullResponseDto
+
 }

@@ -12,11 +12,13 @@ import { LiveEntity } from "./entity/live.entity";
 import { FollowController } from "./controller/follow.controller";
 import {UserFollowEntity} from "./entity/user-follow.entity";
 import {FollowService} from "./service/follow.service";
+import {CategorieService} from "./service/categorie.service";
+import {CategorieController} from "./controller/categorie.controller";
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity, LiveEntity, CategorieLiveEntity, UserFollowEntity]), EmailModule],
-  controllers: [UserController, LiveController, LivesController, FollowController],
-  providers: [UserService, LiveService, FollowService],
+  controllers: [UserController, LiveController, LivesController, FollowController, CategorieController],
+  providers: [UserService, LiveService, FollowService, CategorieService],
   exports: [UserService],
 })
 export class UsersModule {}

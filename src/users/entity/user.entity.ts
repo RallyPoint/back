@@ -16,6 +16,8 @@ export class UserEntity extends BaseEntity<UserEntity> {
     @Column({type: 'varchar'})
     pseudo: string;
     @Column({type: 'varchar'})
+    avatar: string;
+    @Column({type: 'varchar'})
     firstName: string;
     @Column({type: 'varchar'})
     lastName: string;

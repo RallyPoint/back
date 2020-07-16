@@ -1,5 +1,5 @@
 
-import { Injectable } from '@nestjs/common';
+import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
 import {LiveEntity} from "../entity/live.entity";
@@ -32,8 +32,27 @@ export class LiveService {
     });
   }
 
+  public async generateNewKey(liveId: string): Promise<string> {
+    const liveKey : string = StringTools.generateKey(32);
+    this.liveRepository.update(liveId,{key:liveKey});
+    return liveKey
+  }
+
   public async create(): Promise<LiveEntity>{
     return this.liveRepository.save(new LiveEntity({key:StringTools.generateKey(32)}))
+  }
+
+  public async update(liveId: string, data : {title: string, level: string, language: string}): Promise<boolean> {
+    const level: CategorieLiveEntity = await this.categorieLiveRepository.findOne(data.level);
+    const language: CategorieLiveEntity = await this.categorieLiveRepository.findOne(data.language);
+    if(!level || !language){
+      throw new NotFoundException();
+    }
+    return this.liveRepository.update(liveId,{
+      title: data.title,
+      catLevel: level,
+      catLanguage: language
+    }).then(()=>true);
   }
 }
 

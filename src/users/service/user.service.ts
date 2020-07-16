@@ -11,6 +11,7 @@ import {EmailUserService} from "../../email/sevices/email-user.service";
 import * as config from 'config';
 import { LiveService } from "./live.service";
 import {EmailService} from "../../email/sevices/email.service";
+import {IUserUpdate} from "../interface/user.interface";
 
 @Injectable()
 export class UserService {
@@ -22,11 +23,11 @@ export class UserService {
 
 
   public getById(id: string, withLive: boolean = false): Promise<UserEntity>{
-    return this.usersRepository.findOne(id,(withLive?{relations:['live']}:{}));
+    return this.usersRepository.findOne(id,(withLive?{relations:['live','live.catLanguage','live.catLevel']}:{}));
   }
 
   public getByName(name: string, withLive: boolean = false): Promise<UserEntity>{
-    return this.usersRepository.findOne({pseudo: name},(withLive?{relations:['live']}:{}));
+    return this.usersRepository.findOne({pseudo: name},(withLive?{relations:['live','live.catLanguage','live.catLevel']}:{}));
   }
 
   public async findOneByEmail(email: string, sso?: SSO_TYPE): Promise<UserEntity> {
@@ -149,6 +150,12 @@ export class UserService {
     user.pendingPassword = null;
     user.password = await this.cryptPassword(password);
     return this.usersRepository.save(user);
+  }
+
+  public async update(userId: string, data: IUserUpdate): Promise<UserEntity> {
+    this.usersRepository.update(userId,data);
+    const userEntity: UserEntity = await this.usersRepository.findOne(userId);
+    return Object.assign({}, userEntity, data);
   }
 
 }

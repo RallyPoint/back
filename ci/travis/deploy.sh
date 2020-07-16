@@ -28,6 +28,7 @@ helm upgrade --install \
   --wait \
   --set env.NODE_ENV="$KUBE_NAMESPACE" \
   --set ENV_CONFIG="$KUBE_NAMESPACE" \
+  --set image.tag="$TRAVIS_COMMIT" \
   --namespace="$KUBE_NAMESPACE" \
   "$name" \
   ci/chart/

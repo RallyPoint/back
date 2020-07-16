@@ -6,7 +6,6 @@ import {
 import { BaseEntity } from '../../share/entity/base.entity';
 import {CategorieLiveEntity} from "./categorie-live.entity";
 import {UserEntity} from "../../users/entity/user.entity";
-import {UserFollowEntity} from "./user-follow.entity";
 
 @Entity()
 export class LiveEntity extends BaseEntity<LiveEntity> {
@@ -16,9 +15,9 @@ export class LiveEntity extends BaseEntity<LiveEntity> {
     @Column({ type: 'boolean', default: false})
     status: boolean;
     @ManyToOne(type => CategorieLiveEntity, cat => cat.lives)
-    catLevel: string;
+    catLevel: CategorieLiveEntity;
     @ManyToOne(type => CategorieLiveEntity, cat => cat.lives)
-    catLanguage: string;
+    catLanguage: CategorieLiveEntity;
     @ManyToMany(type => UserEntity)
     subscriber: UserEntity[];
     @Index()
