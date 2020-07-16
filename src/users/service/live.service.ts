@@ -22,6 +22,10 @@ export class LiveService {
     return this.liveRepository.update(id,{status}).then(()=>true).catch(()=>false);
   }
 
+  public getByKey(key: string): Promise<LiveEntity>{
+    return this.liveRepository.findOne({key});
+  }
+
   public async getLiveOn(language?: string, level?: string): Promise<LiveEntity[]>{
     return this.liveRepository.find({
       where : {
