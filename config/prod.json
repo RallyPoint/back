@@ -31,5 +31,8 @@
             "clientSecret": "1e2f0cf5353845c3da6b62264ceb8a6060eef6d3",
             "callbackURL": "http://127.0.0.1:9090/auth/github/callback"
         }
+    },
+    "fs" : {
+        "avatar" : "/media/avatar"
     }
 }
