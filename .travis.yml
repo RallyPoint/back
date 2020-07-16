@@ -15,10 +15,10 @@ jobs:
     - stage: Build & Push docker
       script:
         - echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-          - echo $DOCKER_IMAGE
-          - docker build --tag "$DOCKER_USERNAME/$DOCKER_IMAGE:$TRAVIS_COMMIT" --tag "$DOCKER_USERNAME/$DOCKER_IMAGE:latest"  .
-          - docker images
-          - docker push $DOCKER_USERNAME/$DOCKER_IMAGE:$TRAVIS_COMMIT
+        - echo $DOCKER_IMAGE
+        - docker build --tag "$DOCKER_USERNAME/$DOCKER_IMAGE:$TRAVIS_COMMIT" --tag "$DOCKER_USERNAME/$DOCKER_IMAGE:latest"  .
+        - docker images
+        - docker push $DOCKER_USERNAME/$DOCKER_IMAGE:$TRAVIS_COMMIT
     - stage: deploy
       install:
         - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
