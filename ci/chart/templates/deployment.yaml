@@ -34,7 +34,12 @@ spec:
             - name: secret-volume
               mountPath: /etc/secret-volume
               readOnly: true
+            - mountPath: /media
+              name: media-volume
       volumes:
           - name: secret-volume
             secret:
               secretName: back-config
+          - name: media-volume
+            persistentVolumeClaim:
+              claimName: 'media-pvc'
