@@ -36,7 +36,7 @@ export class LivesController {
 
   @Put('/:liveName')
   public async done(@Body() body: livePutDto,
-                    @Param('liveName') liveName: string): Promise<UserResponseDto> {
+                    @Param('liveName') liveName: string): Promise<UserFullResponseDto> {
     const user: UserEntity = await this.userService.getByName(liveName, true);
     if(!user){ throw new NotFoundException();}
     this.liveService.update(user.live.id,{
@@ -44,7 +44,7 @@ export class LivesController {
       level: body.category,
       language: body.language
     });
-    return new UserResponseDto(user);
+    return new UserFullResponseDto(user);
   }
 
 
