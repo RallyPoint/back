@@ -29,6 +29,9 @@ export class UserService {
   public getByName(name: string, withLive: boolean = false): Promise<UserEntity>{
     return this.usersRepository.findOne({pseudo: name},(withLive?{relations:['live','live.catLanguage','live.catLevel']}:{}));
   }
+  public getMain(withLive: boolean = false): Promise<UserEntity>{
+    return this.usersRepository.findOne({main: true},(withLive?{relations:['live','live.catLanguage','live.catLevel']}:{}));
+  }
 
   public async findOneByEmail(email: string, sso?: SSO_TYPE): Promise<UserEntity> {
     const user: UserEntity = await this.usersRepository.findOne({

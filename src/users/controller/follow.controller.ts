@@ -2,7 +2,7 @@ import {
   Body,
   Controller, Delete, Get, NotFoundException, Param, Post, Put, UnauthorizedException
 } from '@nestjs/common';
-import { UserFollowDto } from "../dto/user.dto";
+import {UserFollowDto, UserFullResponseDto, UserResponseDto} from "../dto/user.dto";
 import {UserService} from "../service/user.service";
 import {async} from "rxjs/internal/scheduler/async";
 import {FollowService} from "../service/follow.service";
@@ -20,11 +20,11 @@ export class FollowController {
   @Post('/')
   public async add(@Body() body: UserFollowDto,
                    @Param('userId') userId: string,
-                   @JwtPayload() jwtPayload: JwtModel): Promise<UserEntity>{
+                   @JwtPayload() jwtPayload: JwtModel): Promise<UserResponseDto>{
     if(userId != jwtPayload.id && jwtPayload.roles.indexOf(USER_ROLE.ADMIN)===-1){
       throw new UnauthorizedException();
     }
-    return this.followService.follow(userId,body.liveUserId);
+    return new UserResponseDto(await this.followService.follow(userId,body.liveUserId));
   }
 
   @Delete('/:liveUserId')
@@ -40,10 +40,12 @@ export class FollowController {
   @Get('/')
   public async list(
       @Param('userId') userId: string,
-      @JwtPayload() jwtPayload: JwtModel){
+      @JwtPayload() jwtPayload: JwtModel): Promise<UserResponseDto[]>{
     if(userId != jwtPayload.id && jwtPayload.roles.indexOf(USER_ROLE.ADMIN)===-1){
       throw new UnauthorizedException(userId+"==="+jwtPayload.id);
     }
-    return this.followService.getFollowedOf(userId);
+    return this.followService.getFollowedOf(userId).then((users: UserEntity[])=>{
+      return  users.map((user: UserEntity)=>new UserResponseDto(user))
+    });
   }
 }

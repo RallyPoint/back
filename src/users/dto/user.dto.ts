@@ -1,4 +1,4 @@
-import {IsNotEmpty, IsEmail, Matches, IsString, IsOptional} from 'class-validator';
+import {IsNotEmpty, IsEmail, Matches, IsString, IsOptional, MaxLength, MinLength} from 'class-validator';
 import {Exclude, Expose, Type} from "class-transformer";
 import {SSO_TYPE, USER_ROLE} from "../../auth/constants";
 import {LiveFullResponseDto, LiveResponseDto} from "./live.dto";
@@ -43,6 +43,10 @@ export class UserUpdateDto {
   @IsOptional()
   @IsNotEmpty()
   email?: string;
+  @IsNotEmpty()
+  @MaxLength(500)
+  @MinLength(0)
+  desc: string;
   @IsString()
   @IsOptional()
   @IsNotEmpty()
@@ -66,6 +70,8 @@ export class UserResponseDto {
 
   @Expose()
   id: string;
+  @Expose()
+  desc: string;
   @Expose()
   pseudo: string;
   @Expose()

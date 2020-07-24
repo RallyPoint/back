@@ -14,6 +14,10 @@ export class LiveEntity extends BaseEntity<LiveEntity> {
     key: string;
     @Column({ type: 'boolean', default: false})
     status: boolean;
+    @Column({ type: 'datetime',default:null, nullable: true})
+    date: Date;
+    @Column({ type: 'text',default:null, nullable: true})
+    desc: string;
     @ManyToOne(type => CategorieLiveEntity, cat => cat.lives)
     catLevel: CategorieLiveEntity;
     @ManyToOne(type => CategorieLiveEntity, cat => cat.lives)
@@ -25,4 +29,9 @@ export class LiveEntity extends BaseEntity<LiveEntity> {
     pspKey: string;
     @Column({ type: "varchar", length: 255, default:null, nullable: true})
     title: string;
+    @OneToOne(type => LiveEntity)
+    @JoinColumn()
+    live: LiveEntity;
+    @OneToOne(type => UserEntity, user => user.live) // specify inverse side as a second parameter
+    user: UserEntity;
 }

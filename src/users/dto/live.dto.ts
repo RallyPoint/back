@@ -1,10 +1,14 @@
 import {Exclude, Expose, Type} from "class-transformer";
-import {IsEmail, IsNotEmpty, Matches, MaxLength, MinLength} from "class-validator";
+import {IsDate, IsEmail, IsNotEmpty, Matches, MaxLength, MinLength} from "class-validator";
 
 @Exclude()
 export class LiveResponseDto {
   @Expose()
   id: string;
+  @Expose()
+  date: Date;
+  @Expose()
+  desc: string;
   @Expose()
   status: boolean;
   @Expose()
@@ -25,8 +29,15 @@ export class livePutDto {
   @MaxLength(50)
   @MinLength(10)
   title: string;
+  @MaxLength(500)
+  @MinLength(0)
+  desc: string;
   @IsNotEmpty()
   category: string;
+  @IsNotEmpty()
+  @IsDate()
+  @Type(() => Date)
+  date: Date;
   @IsNotEmpty()
   language: string;
 }

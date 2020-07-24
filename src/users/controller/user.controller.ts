@@ -98,6 +98,9 @@ export class UserController {
     if(body.pseudo) {
       user.pseudo = body.pseudo;
     }
+    if(body.desc) {
+      user.desc = body.desc;
+    }
     if(files && files[0]) {
       user.avatar = files[0].filename;
     }

@@ -29,10 +29,11 @@ export class LiveService {
   public async getLiveOn(language?: string, level?: string): Promise<LiveEntity[]>{
     return this.liveRepository.find({
       where : {
-        status: true,
+        //status: true,
         ...(language?{catLanguage: language} : {}),
         ...(level?{catLevel: level} : {})
-      }
+      },
+      relations : ['user']
     });
   }
 
@@ -46,7 +47,7 @@ export class LiveService {
     return this.liveRepository.save(new LiveEntity({key:StringTools.generateKey(32)}))
   }
 
-  public async update(liveId: string, data : {title: string, level: string, language: string}): Promise<boolean> {
+  public async update(liveId: string, data : {title: string, level: string, desc: string, language: string,date:Date}): Promise<boolean> {
     const level: CategorieLiveEntity = await this.categorieLiveRepository.findOne(data.level);
     const language: CategorieLiveEntity = await this.categorieLiveRepository.findOne(data.language);
     if(!level || !language){
@@ -55,6 +56,8 @@ export class LiveService {
     return this.liveRepository.update(liveId,{
       title: data.title,
       catLevel: level,
+      date: data.date,
+      desc: data.desc,
       catLanguage: language
     }).then(()=>true);
   }

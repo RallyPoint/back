@@ -12,10 +12,14 @@ export class UserEntity extends BaseEntity<UserEntity> {
 
     @Column({type: 'varchar'})
     email: string;
+    @Column({ type: 'boolean', default: false})
+    main: boolean;
+    @Column({ type: 'text',default:null, nullable: true})
+    desc: string;
     @Index()
     @Column({type: 'varchar'})
     pseudo: string;
-    @Column({type: 'varchar'})
+    @Column({type: 'varchar', default:null, nullable: true})
     avatar: string;
     @Column({type: 'varchar'})
     firstName: string;
@@ -26,7 +30,7 @@ export class UserEntity extends BaseEntity<UserEntity> {
     @Index()
     @Column({type: 'enum', enum: SSO_TYPE})
     sso: SSO_TYPE;
-    @Column({type: 'varchar', length: 32})
+    @Column({type: 'varchar', length: 32, default:null, nullable: true})
     @Index()
     ssoId: string;
     @Column({type: 'simple-array'})

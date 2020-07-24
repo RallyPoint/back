@@ -25,6 +25,13 @@ export class LivesController {
     return new UserResponseDto(user);
   }
 
+  @Get('/home/main')
+  public async getMain(@Param('liveName') liveName: string): Promise<UserResponseDto> {
+    const user: UserEntity = await this.userService.getMain(true);
+    if(!user){ throw new NotFoundException();}
+    return new UserResponseDto(user);
+  }
+
   @Put('/:liveName/new-key')
   public async newKey(@Param('liveName') liveName: string): Promise<UserFullResponseDto> {
     const user: UserEntity = await this.userService.getByName(liveName, true);
@@ -42,6 +49,8 @@ export class LivesController {
     this.liveService.update(user.live.id,{
       title: body.title,
       level: body.category,
+      date: body.date,
+      desc: body.desc,
       language: body.language
     });
     return new UserFullResponseDto(user);
