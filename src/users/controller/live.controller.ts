@@ -15,11 +15,13 @@ export class LiveController {
   public async publish(@Body() body: NginxRtmpExternal) {
     console.log(body);
     const live: LiveEntity = await this.liveService.getByKey(body.psk);
-    if(!live){ throw new UnauthorizedException(); }
+    if(!live || live.user.pseudo != body.name){ throw new UnauthorizedException(); }
     return await this.liveService.setStatus(live.id,true).then((success)=>{
       if(success){
+        console.log("SUCCESS");
         return {};
       }else{
+        console.log("FAIL");
         throw new UnauthorizedException();
       }
     });

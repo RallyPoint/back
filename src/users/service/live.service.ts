@@ -23,13 +23,16 @@ export class LiveService {
   }
 
   public getByKey(key: string): Promise<LiveEntity>{
-    return this.liveRepository.findOne({key});
+    return this.liveRepository.findOne({
+      where:{key},
+      relations : ['user']
+    });
   }
 
   public async getLiveOn(language?: string, level?: string): Promise<LiveEntity[]>{
     return this.liveRepository.find({
       where : {
-        //status: true,
+        status: true,
         ...(language?{catLanguage: language} : {}),
         ...(level?{catLevel: level} : {})
       },
