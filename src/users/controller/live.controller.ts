@@ -13,7 +13,8 @@ export class LiveController {
 
   @Post('publish')
   public async publish(@Body() body: NginxRtmpExternal) {
-    const live: LiveEntity = await this.liveService.getByKey(body.name);
+    console.log(body);
+    const live: LiveEntity = await this.liveService.getByKey(body.psk);
     if(!live){ throw new UnauthorizedException(); }
     return await this.liveService.setStatus(live.id,true).then((success)=>{
       if(success){

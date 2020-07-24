@@ -43,9 +43,7 @@ export class UserUpdateDto {
   @IsOptional()
   @IsNotEmpty()
   email?: string;
-  @IsNotEmpty()
   @MaxLength(500)
-  @MinLength(0)
   desc: string;
   @IsString()
   @IsOptional()

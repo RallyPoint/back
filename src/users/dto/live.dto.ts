@@ -30,7 +30,6 @@ export class livePutDto {
   @MinLength(10)
   title: string;
   @MaxLength(500)
-  @MinLength(0)
   desc: string;
   @IsNotEmpty()
   category: string;

@@ -9,4 +9,5 @@ export interface NginxRtmpExternal {
     clientid: string;
     call: string;
     name: string;
+    psk: string;
 }
