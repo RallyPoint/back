@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import {HttpModule, Module} from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserService } from './service/user.service';
 import { UserEntity } from './entity/user.entity';
@@ -14,11 +14,15 @@ import {UserFollowEntity} from "./entity/user-follow.entity";
 import {FollowService} from "./service/follow.service";
 import {CategorieService} from "./service/categorie.service";
 import {CategorieController} from "./controller/categorie.controller";
+import {ReplayService} from "./service/replay.service";
+import {ReplayEntity} from "./entity/replay.entity";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity, LiveEntity, CategorieLiveEntity, UserFollowEntity]), EmailModule],
+  imports: [TypeOrmModule.forFeature([UserEntity, LiveEntity, CategorieLiveEntity, UserFollowEntity,ReplayEntity]), EmailModule,
+    HttpModule,],
   controllers: [UserController, LiveController, LivesController, FollowController, CategorieController],
-  providers: [UserService, LiveService, FollowService, CategorieService],
+  providers: [UserService, LiveService, FollowService, CategorieService, ReplayService],
   exports: [UserService],
 })
 export class UsersModule {}
+

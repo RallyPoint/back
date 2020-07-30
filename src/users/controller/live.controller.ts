@@ -1,19 +1,24 @@
 
-import {Controller, Post, Body, UnauthorizedException} from '@nestjs/common';
-import {NginxRtmpExternal} from "../dto/nginx-rtmp.external";
+import {Controller, Post, Body, UnauthorizedException, HttpService} from '@nestjs/common';
+import {INginxRtmpRecordNotification, NginxRtmpExternal} from "../dto/nginx-rtmp.external";
 import {LiveService} from "../service/live.service";
 import {LiveEntity} from "../entity/live.entity";
+import {ReplayService} from "../service/replay.service";
+import {UserService} from "../service/user.service";
+import {UserEntity} from "../entity/user.entity";
+
 
 /**
  * @todo: ADD IP RESTRICTION !!!
  */
 @Controller('rtmp')
 export class LiveController {
-  constructor(protected readonly liveService: LiveService) {}
+  constructor(protected readonly liveService: LiveService,
+              protected readonly userService: UserService,
+              protected readonly replayService: ReplayService) {}
 
   @Post('publish')
   public async publish(@Body() body: NginxRtmpExternal) {
-    console.log(body);
     const live: LiveEntity = await this.liveService.getByKey(body.psk);
     if(!live || live.user.pseudo != body.name){ throw new UnauthorizedException(); }
     return await this.liveService.setStatus(live.id,true).then((success)=>{
@@ -24,7 +29,7 @@ export class LiveController {
         console.log("FAIL");
         throw new UnauthorizedException();
       }
-    });
+    }).catch(console.log);
   }
 
   @Post('done')
@@ -38,6 +43,18 @@ export class LiveController {
         throw new UnauthorizedException();
       }
     });
+  }
+
+  @Post('record')
+  public async record(@Body() body: INginxRtmpRecordNotification) {
+    const pseudo: string = body.name.split('_').slice(0,-1 ).join('_');
+    console.log(pseudo);
+    const user: UserEntity = await this.userService.getByName(pseudo, true);
+    console.log(pseudo,user);
+    if(!user){ throw new UnauthorizedException(); }
+    console.log(body);
+    this.replayService.create(user.live.title,user,user.live.catLevel,user.live.catLanguage,body.path)
+        .catch(console.log);
   }
 
 

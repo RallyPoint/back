@@ -34,5 +34,8 @@
     },
     "fs" : {
         "avatar" : "/media/avatar"
+    },
+    "convert": {
+        "outputPath" : "/opt/data/hls/"
     }
 }
