@@ -34,10 +34,11 @@ export class LiveController {
 
   @Post('done')
   public async done(@Body() body: NginxRtmpExternal) {
-    const live: LiveEntity = await this.liveService.getByKey(body.name);
-    if(!live){ throw new UnauthorizedException(); }
-    return await this.liveService.setStatus(live.id,false).then((success)=>{
+    const user: UserEntity = await  this.userService.getByName(body.name,true);
+    if(!user){ throw new UnauthorizedException(); }
+    return await this.liveService.setStatus(user.live.id,false).then((success)=>{
       if(success){
+        console.log("SUCCESS");
         return {};
       }else{
         throw new UnauthorizedException();
@@ -53,7 +54,7 @@ export class LiveController {
     console.log(pseudo,user);
     if(!user){ throw new UnauthorizedException(); }
     console.log(body);
-    this.replayService.create(user.live.title,user,user.live.catLevel,user.live.catLanguage,body.path)
+    this.replayService.create(user.live.title,user.live.desc,user,user.live.catLevel,user.live.catLanguage,body.path)
         .catch(console.log);
   }
 

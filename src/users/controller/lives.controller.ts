@@ -5,7 +5,8 @@ import {UserService} from "../service/user.service";
 import {UserEntity} from "../entity/user.entity";
 import {UserFullResponseDto, UserResponseDto} from "../dto/user.dto";
 import {NginxRtmpExternal} from "../dto/nginx-rtmp.external";
-import {livePutDto} from "../dto/live.dto";
+import {livePutDto, LiveResponseDto} from "../dto/live.dto";
+import {LiveEntity} from "../entity/live.entity";
 
 @Controller('lives')
 export class LivesController {
@@ -14,8 +15,10 @@ export class LivesController {
 
   @Get("/")
   public async list(@Param('language') language: string,
-                    @Param('level') level: string): Promise<any>{
-    return this.liveService.getLiveOn(language,level);
+                    @Param('level') level: string): Promise<LiveResponseDto[]>{
+    return this.liveService.getLiveOn(language,level).then((lives: LiveEntity[])=>{
+      return lives.map((live)=>new LiveResponseDto(live));
+    });
   }
 
   @Get('/:liveName')
@@ -42,7 +45,7 @@ export class LivesController {
   }
 
   @Put('/:liveName')
-  public async done(@Body() body: livePutDto,
+  public async update(@Body() body: livePutDto,
                     @Param('liveName') liveName: string): Promise<UserFullResponseDto> {
     const user: UserEntity = await this.userService.getByName(liveName, true);
     if(!user){ throw new NotFoundException();}

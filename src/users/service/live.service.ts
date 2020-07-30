@@ -5,6 +5,7 @@ import {Repository} from "typeorm";
 import {LiveEntity} from "../entity/live.entity";
 import {CategorieLiveEntity} from "../entity/categorie-live.entity";
 import {StringTools} from "../../share/tools/string-tools";
+import {UserEntity} from "../entity/user.entity";
 
 @Injectable()
 export class LiveService {
@@ -36,7 +37,7 @@ export class LiveService {
         ...(language?{catLanguage: language} : {}),
         ...(level?{catLevel: level} : {})
       },
-      relations : ['user']
+      relations : ['user','catLanguage','catLevel']
     });
   }
 

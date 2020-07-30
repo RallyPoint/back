@@ -12,6 +12,12 @@ export class ReplayEntity extends BaseEntity<ReplayEntity> {
     @Index()
     @Column({ type: 'varchar', length: 128 })
     path: string;
+    @Column({ type: 'varchar', length: 128 })
+    file: string;
+    @Column({ type: 'varchar', length: 256 ,default:null, nullable: true})
+    desc: string;
+    @Column({ type: 'datetime',default:null, nullable: true})
+    date: Date;
     @Index()
     @Column({ type: 'varchar', length: 128, default:null, nullable: true })
     convertId: string;

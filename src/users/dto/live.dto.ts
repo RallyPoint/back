@@ -1,8 +1,12 @@
 import {Exclude, Expose, Type} from "class-transformer";
 import {IsDate, IsEmail, IsNotEmpty, Matches, MaxLength, MinLength} from "class-validator";
+import {UserDto} from "./user.dto";
 
 @Exclude()
 export class LiveResponseDto {
+  constructor(data: LiveResponseDto) {
+    Object.assign(this, data);
+  }
   @Expose()
   id: string;
   @Expose()
@@ -17,6 +21,9 @@ export class LiveResponseDto {
   catLanguage: any;
   @Expose()
   title: string;
+  @Expose()
+  @Type(()=>UserDto)
+  user?: UserDto
 }
 @Exclude()
 export class LiveFullResponseDto extends LiveResponseDto {

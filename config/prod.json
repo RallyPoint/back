@@ -36,6 +36,6 @@
         "avatar" : "/media/avatar"
     },
     "convert": {
-        "outputPath" : "/opt/data/hls/"
+        "outputPath" : "/opt/data/hls/replay/"
     }
 }
