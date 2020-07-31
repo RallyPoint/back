@@ -1,5 +1,5 @@
 
-import {Controller, Post, Body, UnauthorizedException, HttpService} from '@nestjs/common';
+import {Controller, Post, Body, UnauthorizedException, HttpService, Req} from '@nestjs/common';
 import {INginxRtmpRecordNotification, NginxRtmpExternal} from "../dto/nginx-rtmp.external";
 import {LiveService} from "../service/live.service";
 import {LiveEntity} from "../entity/live.entity";
@@ -18,7 +18,9 @@ export class LiveController {
               protected readonly replayService: ReplayService) {}
 
   @Post('publish')
-  public async publish(@Body() body: NginxRtmpExternal) {
+  public async publish(@Body() body: NginxRtmpExternal, @Req() req: any) {
+    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+      console.log(body,ip);
     const live: LiveEntity = await this.liveService.getByKey(body.psk);
     if(!live || live.user.pseudo != body.name){ throw new UnauthorizedException(); }
     return await this.liveService.setStatus(live.id,true).then((success)=>{
