@@ -19,8 +19,8 @@ export class LiveService {
     return this.liveRepository.findOne(id);
   }
 
-  public setStatus(id: string,status: boolean): Promise<boolean> {
-    return this.liveRepository.update(id,{status}).then(()=>true).catch(()=>false);
+  public setStatus(id: string,status: boolean, ip: string =  null): Promise<boolean> {
+    return this.liveRepository.update(id,{status,ip}).then(()=>true).catch(()=>false);
   }
 
   public getByKey(key: string): Promise<LiveEntity>{

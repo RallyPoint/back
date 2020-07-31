@@ -10,6 +10,8 @@ export class LiveResponseDto {
   @Expose()
   id: string;
   @Expose()
+  ip: string;
+  @Expose()
   date: Date;
   @Expose()
   desc: string;

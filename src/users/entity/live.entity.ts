@@ -5,13 +5,15 @@ import {
 } from 'typeorm';
 import { BaseEntity } from '../../share/entity/base.entity';
 import {CategorieLiveEntity} from "./categorie-live.entity";
-import {UserEntity} from "../../users/entity/user.entity";
+import {UserEntity} from "./user.entity";
 
 @Entity()
 export class LiveEntity extends BaseEntity<LiveEntity> {
     @Index()
     @Column({ type: 'varchar', length: 32 })
     key: string;
+    @Column({ type: 'varchar', length: 32 })
+    ip: string;
     @Column({ type: 'boolean', default: false})
     status: boolean;
     @Column({ type: 'datetime',default:null, nullable: true})

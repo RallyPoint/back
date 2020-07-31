@@ -19,11 +19,10 @@ export class LiveController {
 
   @Post('publish')
   public async publish(@Body() body: NginxRtmpExternal, @Req() req: any) {
-    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-      console.log(body,ip);
+    const ip = (req.headers['x-forwarded-for'] || req.connection.remoteAddress).split(':').slice('-1')[0];
     const live: LiveEntity = await this.liveService.getByKey(body.psk);
     if(!live || live.user.pseudo != body.name){ throw new UnauthorizedException(); }
-    return await this.liveService.setStatus(live.id,true).then((success)=>{
+    return await this.liveService.setStatus(live.id,true,ip).then((success)=>{
       if(success){
         console.log("SUCCESS");
         return {};
