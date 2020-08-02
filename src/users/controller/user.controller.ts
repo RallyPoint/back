@@ -64,7 +64,6 @@ export class UserController {
         },
         fileFilter: (req, file, cb)=> {
           const MIME_TYPES = ['image/jpeg','image/png'];
-          console.log(file.mimetype,MIME_TYPES.includes(file.mimetype),file);
           if(MIME_TYPES.includes(file.mimetype)){
             return cb(null,true);
           }
@@ -84,7 +83,6 @@ export class UserController {
       @Param('userId')userId: string,
       @JwtPayload() jwtPayload: JwtModel,
       @UploadedFiles() files): Promise<any>{
-    console.log("files",files);
     if(userId != jwtPayload.id && jwtPayload.roles.indexOf(USER_ROLE.ADMIN)===-1){
       throw new UnauthorizedException();
     }

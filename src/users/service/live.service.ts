@@ -51,7 +51,7 @@ export class LiveService {
     return this.liveRepository.save(new LiveEntity({key:StringTools.generateKey(32)}))
   }
 
-  public async update(liveId: string, data : {title: string, level: string, desc: string, language: string,date:Date}): Promise<boolean> {
+  public async update(liveId: string, data : {title: string, level: string, desc: string, thumb: string, language: string,date:Date}): Promise<boolean> {
     const level: CategorieLiveEntity = await this.categorieLiveRepository.findOne(data.level);
     const language: CategorieLiveEntity = await this.categorieLiveRepository.findOne(data.language);
     if(!level || !language){
@@ -61,6 +61,7 @@ export class LiveService {
       title: data.title,
       catLevel: level,
       date: data.date,
+      thumb: data.thumb,
       desc: data.desc,
       catLanguage: language
     }).then(()=>true);

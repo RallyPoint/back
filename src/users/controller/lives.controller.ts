@@ -1,5 +1,15 @@
 
-import {Body, Controller, Get, NotFoundException, Param, Post, Put, UnauthorizedException} from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+  UnauthorizedException, UploadedFiles,
+  UseInterceptors
+} from '@nestjs/common';
 import {LiveService} from "../service/live.service";
 import {UserService} from "../service/user.service";
 import {UserEntity} from "../entity/user.entity";
@@ -7,6 +17,10 @@ import {UserFullResponseDto, UserResponseDto} from "../dto/user.dto";
 import {NginxRtmpExternal} from "../dto/nginx-rtmp.external";
 import {livePutDto, LiveResponseDto} from "../dto/live.dto";
 import {LiveEntity} from "../entity/live.entity";
+import {FilesInterceptor} from "@nestjs/platform-express";
+import {diskStorage} from "multer";
+import {extname} from "path";
+import {JwtModel} from "../../auth/model/jwt.model";
 
 @Controller('lives')
 export class LivesController {
@@ -45,7 +59,29 @@ export class LivesController {
   }
 
   @Put('/:liveName')
+  @UseInterceptors(<any>FilesInterceptor('avatar',1,
+      {
+        limits:{
+          fileSize: 1000000
+        },
+        fileFilter: (req, file, cb)=> {
+          const MIME_TYPES = ['image/jpeg','image/png'];
+          if(MIME_TYPES.includes(file.mimetype)){
+            return cb(null,true);
+          }
+          cb(new Error('BAD FILE TYPE'),false);
+        },
+        storage: diskStorage({
+          destination: config.get('fs.live'),
+          filename: (req, file, cb) => {
+            const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('')
+            return cb(null, `${randomName}${extname(file.originalname)}`)
+          }
+        })
+      }
+  ))
   public async update(@Body() body: livePutDto,
+                      @UploadedFiles() files,
                     @Param('liveName') liveName: string): Promise<UserFullResponseDto> {
     const user: UserEntity = await this.userService.getByName(liveName, true);
     if(!user){ throw new NotFoundException();}
@@ -54,6 +90,7 @@ export class LivesController {
       level: body.category,
       date: body.date,
       desc: body.desc,
+      thumb: files[0].filename,
       language: body.language
     });
     return new UserFullResponseDto(user);

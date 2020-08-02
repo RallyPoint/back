@@ -6,6 +6,7 @@ import {getConnection, Repository} from 'typeorm';
 import {StringTools} from "../../share/tools/string-tools";
 import {SSO_TYPE, USER_ROLE} from "../../auth/constants";
 import * as bcrypt from "bcrypt";
+import * as fs from "fs";
 import {LiveEntity} from "../entity/live.entity";
 import {EmailUserService} from "../../email/sevices/email-user.service";
 import * as config from 'config';
@@ -156,6 +157,10 @@ export class UserService {
   }
 
   public async update(userId: string, data: IUserUpdate): Promise<UserEntity> {
+    if(data.avatar){
+      const user: UserEntity = await this.getById(userId);
+      fs.unlinkSync(config.get('fs.avatar')+"/"+user.avatar);
+    }
     this.usersRepository.update(userId,data);
     const userEntity: UserEntity = await this.usersRepository.findOne(userId);
     return Object.assign({}, userEntity, data);

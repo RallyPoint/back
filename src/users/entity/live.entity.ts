@@ -29,6 +29,8 @@ export class LiveEntity extends BaseEntity<LiveEntity> {
     @Index()
     @Column({ type: "varchar", length: 64, default:null, nullable: true})
     pspKey: string;
+    @Column({ type: "varchar", length: 64, default:null, nullable: true})
+    thumb: string;
     @Column({ type: "varchar", length: 255, default:null, nullable: true})
     title: string;
     @OneToOne(type => LiveEntity)

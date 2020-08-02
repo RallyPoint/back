@@ -12,6 +12,8 @@ export class LiveResponseDto {
   @Expose()
   ip: string;
   @Expose()
+  thumb: string;
+  @Expose()
   date: Date;
   @Expose()
   desc: string;
