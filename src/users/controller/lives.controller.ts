@@ -14,13 +14,12 @@ import {LiveService} from "../service/live.service";
 import {UserService} from "../service/user.service";
 import {UserEntity} from "../entity/user.entity";
 import {UserFullResponseDto, UserResponseDto} from "../dto/user.dto";
-import {NginxRtmpExternal} from "../dto/nginx-rtmp.external";
 import {livePutDto, LiveResponseDto} from "../dto/live.dto";
 import {LiveEntity} from "../entity/live.entity";
 import {FilesInterceptor} from "@nestjs/platform-express";
 import {diskStorage} from "multer";
 import {extname} from "path";
-import {JwtModel} from "../../auth/model/jwt.model";
+import * as config from 'config';
 
 @Controller('lives')
 export class LivesController {
