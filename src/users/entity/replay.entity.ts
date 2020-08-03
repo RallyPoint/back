@@ -12,7 +12,7 @@ export class ReplayEntity extends BaseEntity<ReplayEntity> {
     @Index()
     @Column({ type: 'varchar', length: 128 })
     path: string;
-    @Column({ type: 'varchar', length: 128 })
+    @Column({ type: 'varchar', length: 128 ,default:null, nullable: true})
     file: string;
     @Column({ type: 'varchar', length: 256 ,default:null, nullable: true})
     desc: string;

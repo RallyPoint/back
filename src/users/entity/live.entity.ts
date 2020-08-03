@@ -12,7 +12,7 @@ export class LiveEntity extends BaseEntity<LiveEntity> {
     @Index()
     @Column({ type: 'varchar', length: 32 })
     key: string;
-    @Column({ type: 'varchar', length: 32 })
+    @Column({ type: 'varchar', length: 32, default:null, nullable: true})
     ip: string;
     @Column({ type: 'boolean', default: false})
     status: boolean;
