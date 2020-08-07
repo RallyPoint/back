@@ -1,5 +1,5 @@
 import {Exclude, Expose, Type} from "class-transformer";
-import {UserDto} from "./user.dto";
+import {UserResponseDto} from "./user.dto";
 
 @Exclude()
 export class ReplayResponseDto {
@@ -21,6 +21,6 @@ export class ReplayResponseDto {
   @Expose()
   file: string;
   @Expose()
-  @Type(()=>UserDto)
-  user?: UserDto
+  @Type(()=>UserResponseDto)
+  user?: UserResponseDto
 }
