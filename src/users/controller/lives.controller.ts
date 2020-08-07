@@ -84,14 +84,18 @@ export class LivesController {
                     @Param('liveName') liveName: string): Promise<UserFullResponseDto> {
     const user: UserEntity = await this.userService.getByName(liveName, true);
     if(!user){ throw new NotFoundException();}
-    this.liveService.update(user.live.id,{
+    const data = {
       title: body.title,
       level: body.category,
       date: body.date,
       desc: body.desc,
-      thumb: files[0].filename,
+      thumb : null,
       language: body.language
-    });
+    };
+    if(files && files[0]){
+      data.thumb = files[0].filename;
+    }
+    this.liveService.update(user.live.id,data);
     return new UserFullResponseDto(user);
   }
 

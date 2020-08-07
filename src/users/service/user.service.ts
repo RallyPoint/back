@@ -162,7 +162,7 @@ export class UserService {
       try {
         fs.unlinkSync(config.get('fs.avatar')+"/"+user.avatar);
       }catch (e) {
-        
+
       }
     }
     this.usersRepository.update(userId,data);
