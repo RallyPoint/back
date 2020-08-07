@@ -1,4 +1,7 @@
 {
+    "rallypointtech": {
+        "baseUrl": "https://rallypoint.tech/"
+    },
     "mysql": {
         "host": "mysql.prod.svc.cluster.local",
         "port": 3306,
@@ -29,7 +32,7 @@
             "endpoint" : "https://github.com/",
             "clientID": "4b64a6e73596ba9eac5f",
             "clientSecret": "1e2f0cf5353845c3da6b62264ceb8a6060eef6d3",
-            "callbackURL": "http://127.0.0.1:9090/auth/github/callback"
+            "callbackURL": "http://rallypoint.tech/auth/github/callback"
         }
     },
     "fs" : {

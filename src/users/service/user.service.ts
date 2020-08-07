@@ -157,9 +157,13 @@ export class UserService {
   }
 
   public async update(userId: string, data: IUserUpdate): Promise<UserEntity> {
-    if(data.avatar){
-      const user: UserEntity = await this.getById(userId);
-      fs.unlinkSync(config.get('fs.avatar')+"/"+user.avatar);
+    const user: UserEntity = await this.getById(userId);
+    if(data.avatar && user.avatar){
+      try {
+        fs.unlinkSync(config.get('fs.avatar')+"/"+user.avatar);
+      }catch (e) {
+        
+      }
     }
     this.usersRepository.update(userId,data);
     const userEntity: UserEntity = await this.usersRepository.findOne(userId);
