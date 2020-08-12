@@ -1,0 +1,38 @@
+sudo: required
+
+language: bash
+services: docker
+
+env:
+  global:
+    - DOCKER_IMAGE="back"
+    - DOCKER_USERNAME=rallypointtech
+    - KUBE_NAMESPACE="prod"
+    - CI_ENVIRONMENT_SLUG="back"
+
+jobs:
+  include:
+    - stage: Build & Push docker
+      script:
+        - echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - echo $DOCKER_IMAGE
+        - docker build --tag "$DOCKER_USERNAME/$DOCKER_IMAGE:$TRAVIS_COMMIT" --tag "$DOCKER_USERNAME/$DOCKER_IMAGE:latest"  .
+        - docker images
+        - docker push $DOCKER_USERNAME/$DOCKER_IMAGE:$TRAVIS_COMMIT
+    - stage: deploy
+      install:
+        - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+        - chmod +x ./kubectl
+        - sudo mv ./kubectl /usr/local/bin/kubectl
+        - mkdir ${HOME}/.kube
+        - echo "$KUBE_CONFIG" | base64 --decode > ${HOME}/.kube/config
+        - kubectl get pods
+        - curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+        - chmod 700 get_helm.sh
+        - sudo ./get_helm.sh
+        - echo "END INSTALL"
+      script: skip
+      deploy:
+        skip_cleanup: true
+        provider: script
+        script: bash ./ci/travis/deploy.sh

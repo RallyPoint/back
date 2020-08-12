@@ -1,0 +1,28 @@
+{
+    "mysql": {
+        "host": "db",
+        "port": 3306,
+        "username": "user",
+        "password": "password",
+        "database": "rallypoint"
+    },
+    "api": {
+        "github" : {
+            "endpoint" : "https://api.github.com/"
+        }
+    },
+    "cert": {
+        "jwt" : {
+            "private" : "./config/cert/prod.key"
+        }
+    },
+    "OAuth": {
+        "github": {
+            "endpoint" : "https://github.com/",
+            "clientID": "",
+            "clientSecret": "",
+            "callbackURL": "http://127.0.0.1:9090/auth/github/callback"
+        }
+    }
+}
+

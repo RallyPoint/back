@@ -1,0 +1,19 @@
+{
+  "type": "mysql",
+  "entities": [
+    "dist/**/*.entity{.ts,.js}"
+  ],
+  "migrations": [
+    "dist/migration/!(abstract*)"
+  ],
+  "cli": {
+    "migrationsDir": "src/migration"
+  },
+  "synchronize": true,
+  "logging": true,
+  "host": "db",
+  "port": 3306,
+  "username": "user",
+  "password": "password",
+  "database": "rallypoint"
+}

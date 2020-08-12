@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "fullname" . }}
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/issuer: "letsencrypt-prod"
+spec:
+  tls:
+    - hosts:
+        - api.rallypoint.tech
+      secretName: back-tls
+  rules:
+    - host: api.rallypoint.tech
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: {{ template "fullname" . }}-clusteip
+              servicePort: 80
