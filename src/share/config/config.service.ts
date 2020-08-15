@@ -13,7 +13,7 @@ class ConfigService {
             "migrationsDir": "src/migration"
         },
         synchronize: true,
-        logging: true,
+        logging: false,
         ...config.get('mysql')
     }
   }

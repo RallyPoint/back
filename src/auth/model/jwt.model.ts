@@ -10,7 +10,6 @@ export class JwtModel {
     public roles : USER_ROLE[];
 
     constructor(model: { id: string; pseudo: string; email: string; sso: SSO_TYPE, roles: USER_ROLE[] }){
-        console.log(model);
         Object.assign(<any>this,{roles : [USER_ROLE.USER]},model);
     }
 

@@ -89,7 +89,6 @@ export class UserService {
       this.emailService.addContact(user.email,user.pseudo);
       return new UserEntity(user);
     }).catch((e)=>{
-      console.log(e.code);
       if(e.code == "ER_DUP_ENTRY") {
         throw new BadRequestException("USER_EXIST");
       }

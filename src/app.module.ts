@@ -7,13 +7,15 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { AppController } from './app.controller';
 import {EmailModule} from "./email/email.module";
+import {ShareModule} from "./share/share.module";
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
     AuthModule,
     UsersModule,
-    EmailModule
+    EmailModule,
+    ShareModule
   ],
   controllers: [AppController, StatusController],
   providers: [AppService],

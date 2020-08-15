@@ -6,6 +6,7 @@ import {LiveEntity} from "../entity/live.entity";
 import {ReplayService} from "../service/replay.service";
 import {UserService} from "../service/user.service";
 import {UserEntity} from "../entity/user.entity";
+import {RPTLoggerService} from "../../share/logger/logger.service";
 
 
 /**
@@ -25,13 +26,13 @@ export class LiveController {
     setTimeout(()=>{
       this.liveService.setStatus(live.id,true,ip).then((success)=>{
         if(success){
-          console.log("SUCCESS");
           return {};
         }else{
-          console.log("FAIL");
           throw new UnauthorizedException();
         }
-      }).catch(console.log);
+      }).catch((e)=>{
+        throw e;
+      });
     }, this.DELAY_STATUS);
     return ;
   }
@@ -43,25 +44,21 @@ export class LiveController {
     setTimeout(()=>{
       return this.liveService.setStatus(user.live.id,false).then((success)=>{
         if(success){
-          console.log("SUCCESS");
           return {};
         }else{
           throw new UnauthorizedException();
         }
-      });
+      }).catch((e) => {throw e;});
     }, this.DELAY_STATUS);
   }
 
   @Post('record')
   public async record(@Body() body: INginxRtmpRecordNotification) {
     const pseudo: string = body.name.split('_').slice(0,-1 ).join('_');
-    console.log(pseudo);
     const user: UserEntity = await this.userService.getByName(pseudo, true);
-    console.log(pseudo,user);
     if(!user){ throw new UnauthorizedException(); }
-    console.log(body);
     this.replayService.create(user.live.title,user.live.desc,user,user.live.catLevel,user.live.catLanguage,body.path)
-        .catch(console.log);
+        .catch((e) => { throw e; } );
   }
 
 
