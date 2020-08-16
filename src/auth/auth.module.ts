@@ -22,7 +22,8 @@ const privateKey = fs.readFileSync(config.get("cert.jwt.private"));
     JwtModule.register({
       signOptions: { algorithm: "RS256", expiresIn: '60d'},
       verifyOptions:  { algorithms: ["RS256"]},
-      secret: privateKey,
+      privateKey: atob(config.get('cert.jwt.private')),
+      publicKey: atob(config.get('cert.jwt.public'))
     }),
   ],
   providers: [AuthService,GithubService, JwtMiddleware, GuardService],
