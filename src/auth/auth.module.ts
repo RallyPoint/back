@@ -12,7 +12,6 @@ import * as config from 'config';
 import {JwtMiddleware} from "./service/jwt.middleware";
 import {GuardService} from "./service/auth.gard";
 
-const privateKey = fs.readFileSync(config.get("cert.jwt.private"));
 
 @Module({
   imports: [
