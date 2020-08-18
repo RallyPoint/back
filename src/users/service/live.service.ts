@@ -1,7 +1,6 @@
-
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
-import {Repository} from "typeorm";
+import {Like, Raw, Repository} from "typeorm";
 import {LiveEntity} from "../entity/live.entity";
 import {CategorieLiveEntity} from "../entity/categorie-live.entity";
 import {StringTools} from "../../share/tools/string-tools";
@@ -30,14 +29,28 @@ export class LiveService {
     });
   }
 
-  public async getLiveOn(language?: string, level?: string): Promise<LiveEntity[]>{
+  public async getLiveOn(language?: string, level?: string, title?: string, skip:number = 0, take:number = 20): Promise<LiveEntity[]>{
     return this.liveRepository.find({
       where : {
-        status: true,
+        status: false,
         ...(language?{catLanguage: language} : {}),
-        ...(level?{catLevel: level} : {})
+        ...(level?{catLevel: level} : {}),
+        ...(title?{title:Raw( alias => `LOWER(${alias}) Like '%${title.toLowerCase()}%'`)}:{})
       },
-      relations : ['user','catLanguage','catLevel']
+      relations : ['user','catLanguage','catLevel'],
+      take: take,
+      skip: skip
+    });
+  }
+
+  public async countLiveOn(language?: string, level?: string, title?: string, skip:number = 0, take:number = 20): Promise<number>{
+    return this.liveRepository.count({
+      where : {
+        status: false,
+        ...(language?{catLanguage: language} : {}),
+        ...(level?{catLevel: level} : {}),
+        ...(title?{title:Raw( alias => `LOWER(${alias}) Like '%${title.toLowerCase()}%'`)}:{})
+      }
     });
   }
 

@@ -32,6 +32,7 @@ export class LiveEntity extends BaseEntity<LiveEntity> {
     @Column({ type: "varchar", length: 64, default:null, nullable: true})
     thumb: string;
     @Column({ type: "varchar", length: 255, default:null, nullable: true})
+    @Index()
     title: string;
     @OneToOne(type => LiveEntity)
     @JoinColumn()

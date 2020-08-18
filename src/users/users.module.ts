@@ -17,11 +17,12 @@ import {CategorieController} from "./controller/categorie.controller";
 import {ReplayService} from "./service/replay.service";
 import {ReplayEntity} from "./entity/replay.entity";
 import {ReplayController} from "./controller/replay.controller";
+import {SearchController} from "./controller/search.controller";
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity, LiveEntity, CategorieLiveEntity, UserFollowEntity,ReplayEntity]), EmailModule,
     HttpModule,],
-  controllers: [UserController, LiveController, LivesController, FollowController, CategorieController, ReplayController],
+  controllers: [UserController, LiveController, LivesController, FollowController, CategorieController, ReplayController, SearchController],
   providers: [UserService, LiveService, FollowService, CategorieService, ReplayService],
   exports: [UserService],
 })

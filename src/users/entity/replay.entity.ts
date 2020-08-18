@@ -30,6 +30,7 @@ export class ReplayEntity extends BaseEntity<ReplayEntity> {
     @ManyToOne(type => CategorieLiveEntity, cat => cat.lives)
     catLanguage: CategorieLiveEntity;
     @Column({ type: "varchar", length: 255, default:null, nullable: true})
+    @Index()
     title: string;
     @ManyToOne(type => UserEntity, user => user.replay) // specify inverse side as a second parameter
     user: UserEntity;

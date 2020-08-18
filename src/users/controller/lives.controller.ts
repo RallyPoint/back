@@ -6,7 +6,7 @@ import {
   NotFoundException,
   Param,
   Post,
-  Put,
+  Put, Query,
   UnauthorizedException, UploadedFiles,
   UseInterceptors
 } from '@nestjs/common';
@@ -26,13 +26,6 @@ export class LivesController {
   constructor(protected readonly liveService: LiveService,
               protected readonly userService: UserService) {}
 
-  @Get("/")
-  public async list(@Param('language') language: string,
-                    @Param('level') level: string): Promise<LiveResponseDto[]>{
-    return this.liveService.getLiveOn(language,level).then((lives: LiveEntity[])=>{
-      return lives.map((live)=>new LiveResponseDto(live));
-    });
-  }
 
   @Get('/:liveName')
   public async get(@Param('liveName') liveName: string): Promise<UserResponseDto> {

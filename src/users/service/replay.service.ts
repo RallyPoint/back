@@ -1,7 +1,7 @@
 
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
-import {Repository} from "typeorm";
+import {Like, Raw, Repository} from "typeorm";
 import {CategorieLiveEntity} from "../entity/categorie-live.entity";
 import {ReplayEntity} from "../entity/replay.entity";
 import {UserEntity} from "../entity/user.entity";
@@ -38,6 +38,29 @@ export class ReplayService {
         ...(userId?{user: userId} : {})
       },
       take:20,
+      relations : ['user','catLanguage','catLevel']
+    });
+  }
+  public countReplay(language?: string, level?: string, title?: string, skip:number = 0, take:number = 20): Promise<number>{
+    return this.replayRepository.count({
+      where : {
+        status: true,
+        ...(language?{catLanguage: language} : {}),
+        ...(level?{catLevel: level} : {}),
+        ...(title?{title:Raw( alias => `LOWER(${alias}) Like '%${title.toLowerCase()}%'`)}:{})
+      }
+    });
+  }
+  public getReplay(language?: string, level?: string, title?: string, skip:number = 0, take:number = 20): Promise<ReplayEntity[]>{
+    return this.replayRepository.find({
+      where : {
+        status: true,
+        ...(language?{catLanguage: language} : {}),
+        ...(level?{catLevel: level} : {}),
+        ...(title?{title:Raw( alias => `LOWER(${alias}) Like '%${title.toLowerCase()}%'`)}:{})
+      },
+      take: take,
+      skip: skip,
       relations : ['user','catLanguage','catLevel']
     });
   }
