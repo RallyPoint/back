@@ -38,7 +38,6 @@ export class SearchController {
       return lives.map((live)=>new LiveResponseDto(live));
     });
     const replay: Promise<ReplayResponseDto[]> = this.replayService.getReplay(language,level,title).then((replays: ReplayEntity[])=>{
-      console.log(replays);
       return replays.map((replay)=>new ReplayResponseDto(replay));
     });
     return {
