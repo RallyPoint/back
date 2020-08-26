@@ -2,7 +2,7 @@ import {IsNotEmpty, IsEmail, Matches, IsString, IsOptional, MaxLength, MinLength
 import {Exclude, Expose, Type} from "class-transformer";
 import {SSO_TYPE, USER_ROLE} from "../../auth/constants";
 import {LiveFullResponseDto, LiveResponseDto} from "./live.dto";
-
+import * as showdown from 'showdown';
 export class UserDto {
   @IsNotEmpty()
   @IsEmail()
@@ -64,10 +64,13 @@ export class UserResponseDto {
 
   constructor(data: UserResponseDto) {
     Object.assign(this, data);
+    this.descHtml = (new showdown.Converter()).makeHtml(data.desc);
   }
 
   @Expose()
   id: string;
+  @Expose()
+  descHtml?: string;
   @Expose()
   desc: string;
   @Expose()

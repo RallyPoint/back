@@ -8,6 +8,7 @@ import { UsersModule } from './users/users.module';
 import { AppController } from './app.controller';
 import {EmailModule} from "./email/email.module";
 import {ShareModule} from "./share/share.module";
+import {CmsModule} from "./cms/cms.module";
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import {ShareModule} from "./share/share.module";
     AuthModule,
     UsersModule,
     EmailModule,
-    ShareModule
+    ShareModule,
+    CmsModule
   ],
   controllers: [AppController, StatusController],
   providers: [AppService],

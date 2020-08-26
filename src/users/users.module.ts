@@ -21,7 +21,7 @@ import {SearchController} from "./controller/search.controller";
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity, LiveEntity, CategorieLiveEntity, UserFollowEntity,ReplayEntity]), EmailModule,
-    HttpModule,],
+    HttpModule],
   controllers: [UserController, LiveController, LivesController, FollowController, CategorieController, ReplayController, SearchController],
   providers: [UserService, LiveService, FollowService, CategorieService, ReplayService],
   exports: [UserService],

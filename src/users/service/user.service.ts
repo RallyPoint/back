@@ -99,26 +99,12 @@ export class UserService {
 
   public async cryptPassword(password: string): Promise<string>{
     password = password.replace(/ /g, '+').toLowerCase();
-    return new Promise((resolve, reject)=>{
-      bcrypt.genSalt(10, function(err, salt) {
-        if (err) return reject(err);
-        bcrypt.hash(password, salt, function(err, hash) {
-          if (err) return reject(err);
-          return resolve(hash);
-        });
-      });
-    });
+    return bcrypt.hash(password, await bcrypt.genSalt(10));
   }
 
   public async comparePassword(password:string, cryptPassword: string): Promise<boolean>{
     password = password.replace(/ /g, '+').toLowerCase();
-    return new Promise((resolve, reject)=>{
-      bcrypt.compare(password, cryptPassword, function(err, isPasswordMatch) {
-        return err == null ?
-            resolve(isPasswordMatch) :
-            reject(err);
-      });
-    });
+    return bcrypt.compare(password, cryptPassword);
   }
 
   public async createResetPassword(email: string): Promise<boolean>{
