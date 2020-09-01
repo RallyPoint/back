@@ -20,6 +20,7 @@ import {FilesInterceptor} from "@nestjs/platform-express";
 import * as config from 'config';
 import { extname } from "path";
 import { diskStorage } from 'multer'
+import {Roles} from "../../auth/decorator/roles.decorator";
 
 
 
@@ -57,6 +58,7 @@ export class UserController {
   }
 
   @Put(':userId')
+  @Roles([USER_ROLE.USER])
   @UseInterceptors(<any>FilesInterceptor('avatar',1,
       {
         limits:{

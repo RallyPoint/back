@@ -11,6 +11,7 @@ import * as fs from 'fs';
 import * as config from 'config';
 import {JwtMiddleware} from "./service/jwt.middleware";
 import {GuardService} from "./service/auth.gard";
+import {AuthServerGard} from "./service/auth-server.gard";
 
 
 @Module({
@@ -25,8 +26,8 @@ import {GuardService} from "./service/auth.gard";
       publicKey:  new Buffer(config.get('cert.jwt.public'), 'base64').toString('binary')
     }),
   ],
-  providers: [AuthService,GithubService, JwtMiddleware, GuardService],
-  exports: [AuthService, JwtMiddleware, GuardService],
+  providers: [AuthService,GithubService, JwtMiddleware, GuardService,AuthServerGard],
+  exports: [AuthService, JwtMiddleware, GuardService,AuthServerGard],
   controllers: [AuthController],
 })
 export class AuthModule {

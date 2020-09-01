@@ -1,5 +1,5 @@
 
-import {Controller, Post, Body, UnauthorizedException, HttpService, Req} from '@nestjs/common';
+import {Controller, Post, Body, UnauthorizedException, HttpService, Req, UseGuards} from '@nestjs/common';
 import {INginxRtmpRecordNotification, NginxRtmpExternal} from "../dto/nginx-rtmp.external";
 import {LiveService} from "../service/live.service";
 import {LiveEntity} from "../entity/live.entity";
@@ -7,11 +7,10 @@ import {ReplayService} from "../service/replay.service";
 import {UserService} from "../service/user.service";
 import {UserEntity} from "../entity/user.entity";
 import {RPTLoggerService} from "../../share/logger/logger.service";
+import {AuthServerGard} from "../../auth/service/auth-server.gard";
 
 
-/**
- * @todo: ADD IP RESTRICTION !!!
- */
+@UseGuards(AuthServerGard)
 @Controller('rtmp')
 export class LiveController {
   constructor(protected readonly liveService: LiveService,

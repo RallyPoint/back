@@ -24,7 +24,6 @@ export class GuardService implements CanActivate {
         const request = context.switchToHttp().getRequest();
         if(!request.jwtPayload){return false;}
         const jwtPayload: JwtModel = new JwtModel(request.jwtPayload);
-        if (!jwtPayload || !jwtPayload.roles) {}
         const jwtRoles = [].concat(...jwtPayload.roles.map((role) => GuardService.SUBS_ROLES[role]));
         const hasRole = () => jwtRoles.some((role) => roles.includes(role));
         const status = jwtPayload && jwtRoles && hasRole();

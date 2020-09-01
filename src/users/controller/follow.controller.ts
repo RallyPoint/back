@@ -1,15 +1,12 @@
-import {
-  Body,
-  Controller, Delete, Get, NotFoundException, Param, Post, Put, UnauthorizedException
-} from '@nestjs/common';
-import {UserFollowDto, UserFullResponseDto, UserResponseDto} from "../dto/user.dto";
+import {Body, Controller, Delete, Get, Param, Post, UnauthorizedException} from '@nestjs/common';
+import {UserFollowDto, UserResponseDto} from "../dto/user.dto";
 import {UserService} from "../service/user.service";
-import {async} from "rxjs/internal/scheduler/async";
 import {FollowService} from "../service/follow.service";
 import {JwtPayload} from "../../auth/decorator/jwt-payload.decorator";
 import {JwtModel} from "../../auth/model/jwt.model";
 import {USER_ROLE} from "../../auth/constants";
 import {UserEntity} from "../entity/user.entity";
+import {Roles} from "../../auth/decorator/roles.decorator";
 
 @Controller('user/:userId/follow')
 export class FollowController {
@@ -18,6 +15,7 @@ export class FollowController {
               private readonly userService: UserService) {}
 
   @Post('/')
+  @Roles([USER_ROLE.USER])
   public async add(@Body() body: UserFollowDto,
                    @Param('userId') userId: string,
                    @JwtPayload() jwtPayload: JwtModel): Promise<UserResponseDto>{
@@ -28,6 +26,7 @@ export class FollowController {
   }
 
   @Delete('/:liveUserId')
+  @Roles([USER_ROLE.USER])
   public async remove(@Param('liveUserId') liveUserId: string,
                    @Param('userId') userId: string,
                       @JwtPayload() jwtPayload: JwtModel): Promise<boolean>{
@@ -38,6 +37,7 @@ export class FollowController {
   }
 
   @Get('/')
+  @Roles([USER_ROLE.USER])
   public async list(
       @Param('userId') userId: string,
       @JwtPayload() jwtPayload: JwtModel): Promise<UserResponseDto[]>{

@@ -1,25 +1,27 @@
-
 import {
   Body,
   Controller,
   Get,
   NotFoundException,
   Param,
-  Post,
-  Put, Query,
-  UnauthorizedException, UploadedFiles,
+  Put,
+  UnauthorizedException,
+  UploadedFiles, UseGuards,
   UseInterceptors
 } from '@nestjs/common';
 import {LiveService} from "../service/live.service";
 import {UserService} from "../service/user.service";
 import {UserEntity} from "../entity/user.entity";
 import {UserFullResponseDto, UserResponseDto} from "../dto/user.dto";
-import {livePutDto, LiveResponseDto} from "../dto/live.dto";
-import {LiveEntity} from "../entity/live.entity";
+import {livePutDto} from "../dto/live.dto";
 import {FilesInterceptor} from "@nestjs/platform-express";
 import {diskStorage} from "multer";
 import {extname} from "path";
 import * as config from 'config';
+import {Roles} from "../../auth/decorator/roles.decorator";
+import {USER_ROLE} from "../../auth/constants";
+import {JwtPayload} from "../../auth/decorator/jwt-payload.decorator";
+import {JwtModel} from "../../auth/model/jwt.model";
 
 @Controller('lives')
 export class LivesController {
@@ -42,15 +44,18 @@ export class LivesController {
   }
 
   @Put('/:liveName/new-key')
-  public async newKey(@Param('liveName') liveName: string): Promise<UserFullResponseDto> {
+  @Roles([USER_ROLE.USER])
+  public async newKey(@Param('liveName') liveName: string,
+  @JwtPayload() jwtPayload: JwtModel): Promise<UserFullResponseDto> {
     const user: UserEntity = await this.userService.getByName(liveName, true);
     if(!user){ throw new NotFoundException();}
-    const liveKey = await this.liveService.generateNewKey(user.live.id);
-    user.live.key = liveKey;
+    if(user.id !== jwtPayload.id){ throw  new UnauthorizedException(); }
+    user.live.key = await this.liveService.generateNewKey(user.live.id);
     return new UserFullResponseDto(user);
   }
 
   @Put('/:liveName')
+  @Roles([USER_ROLE.USER])
   @UseInterceptors(<any>FilesInterceptor('avatar',1,
       {
         limits:{
@@ -74,9 +79,11 @@ export class LivesController {
   ))
   public async update(@Body() body: livePutDto,
                       @UploadedFiles() files,
+                      @JwtPayload() jwtPayload: JwtModel,
                     @Param('liveName') liveName: string): Promise<UserFullResponseDto> {
     const user: UserEntity = await this.userService.getByName(liveName, true);
     if(!user){ throw new NotFoundException();}
+    if(user.id !== jwtPayload.id){ throw  new UnauthorizedException(); }
     const data = {
       title: body.title,
       level: body.category,
