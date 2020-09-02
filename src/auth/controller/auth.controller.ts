@@ -31,10 +31,6 @@ export class AuthController {
 
   @Post('github-login')
   public async githubLogin(@Body() body: githubDto): Promise<AuthentificationResponseDto>{
-    throw new HttpException({
-      miss : ["email"]
-    },HttpStatus.BAD_REQUEST);
-
     let data = await this.githubService.getUser(body.code);
     let user: UserEntity;
     try {
