@@ -43,12 +43,6 @@ export class ExceptionsFilter implements ExceptionFilter {
             exception : JSON.stringify(exception),
             stack: exception.stack
         });
-        response.status(exception.getStatus()).json({
-            statusCode: exception.getStatus(),
-            timestamp: new Date().toISOString(),
-            path: request.url,
-            code: exception.getStatus(),
-            message: exception.message
-        });
+        response.status(exception.getStatus()).json(exception.getResponse());
     }
 }
