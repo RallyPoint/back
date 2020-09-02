@@ -42,4 +42,4 @@ spec:
               secretName: back-config
           - name: media-volume
             persistentVolumeClaim:
-              claimName: 'media-pvc'
+              claimName: 'media-nfs-pvc'
