@@ -3,6 +3,7 @@ import {Exclude, Expose, Type} from "class-transformer";
 import {SSO_TYPE, USER_ROLE} from "../../auth/constants";
 import {LiveFullResponseDto, LiveResponseDto} from "./live.dto";
 import * as showdown from 'showdown';
+import * as escapeHTML from 'escape-html';
 export class UserDto {
   @IsNotEmpty()
   @IsEmail()
@@ -64,7 +65,7 @@ export class UserResponseDto {
 
   constructor(data: UserResponseDto) {
     Object.assign(this, data);
-    this.descHtml = (new showdown.Converter()).makeHtml(data.desc);
+    this.descHtml = (new showdown.Converter()).makeHtml(escapeHTML(data.desc));
   }
 
   @Expose()
