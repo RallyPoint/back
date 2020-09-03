@@ -56,7 +56,7 @@ export class LivesController {
 
   @Put('/:liveName')
   @Roles([USER_ROLE.USER])
-  @UseInterceptors(<any>FilesInterceptor('avatar',1,
+  @UseInterceptors(<any>FilesInterceptor('thumb',1,
       {
         limits:{
           fileSize: 1000000
