@@ -22,9 +22,9 @@ export class UserEntity extends BaseEntity<UserEntity> {
     pseudo: string;
     @Column({type: 'varchar', default:null, nullable: true})
     avatar: string;
-    @Column({type: 'varchar'})
+    @Column({type: 'varchar', default:null, nullable: true})
     firstName: string;
-    @Column({type: 'varchar'})
+    @Column({type: 'varchar', default:null, nullable: true})
     lastName: string;
     @Column({type: 'varchar'})
     password: string;
