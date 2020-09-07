@@ -19,7 +19,7 @@ export class LiveController {
   private DELAY_STATUS: number = 10000;
   @Post('publish')
   public async publish(@Body() body: NginxRtmpExternal, @Req() req: any) {
-    const ip = (req.headers['x-forwarded-for'] || req.connection.remoteAddress).split(':').slice('-1')[0];
+    const ip = (req.headers['x-forwarded-for'] || req.connection.remoteAddress).split(':').slice(-1)[0];
     const live: LiveEntity = await this.liveService.getByKey(body.param.replace('?',''));
     if(!live || live.user.pseudo != body.stream){ return 1; }
     setTimeout(()=>{
