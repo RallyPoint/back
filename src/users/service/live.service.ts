@@ -32,7 +32,7 @@ export class LiveService {
   public async getLiveOn(language?: string, level?: string, title?: string, skip:number = 0, take:number = 20): Promise<LiveEntity[]>{
     return this.liveRepository.find({
       where : {
-        status: false,
+        status: true,
         ...(language?{catLanguage: language} : {}),
         ...(level?{catLevel: level} : {}),
         ...(title?{title:Raw( alias => `LOWER(${alias}) Like '%${title.toLowerCase()}%'`)}:{})
@@ -46,7 +46,7 @@ export class LiveService {
   public async countLiveOn(language?: string, level?: string, title?: string, skip:number = 0, take:number = 20): Promise<number>{
     return this.liveRepository.count({
       where : {
-        status: false,
+        status: true,
         ...(language?{catLanguage: language} : {}),
         ...(level?{catLevel: level} : {}),
         ...(title?{title:Raw( alias => `LOWER(${alias}) Like '%${title.toLowerCase()}%'`)}:{})
