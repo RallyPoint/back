@@ -1,27 +1,23 @@
 
 export interface NginxRtmpExternal {
+    action: string;
+    client_id: number;
+    ip: string;
+    vhost: string;
     app: string;
-    flashver: string;
-    swfurl: string;
-    tcurl: string;
-    pageurl: string;
-    addr: string;
-    clientid: string;
-    call: string;
-    name: string;
-    psk: string;
+    tcUrl: string;
+    stream: string;
+    param: string;
 }
 
 export interface INginxRtmpRecordNotification {
-    app:  string;
-    flashver:  string;
-    swfurl: string;
-    tcurl:  string;
-    pageurl:  string;
-    addr:  string;
-    clientid:  string;
-    call:  string;
-    recorder:  string;
-    name:  string;
-    path:  string;
+    action: string;
+    client_id: number;
+    ip: string;
+    vhost: string;
+    app: string;
+    stream: string;
+    param: string;
+    cwd: string;
+    file: string;
 }

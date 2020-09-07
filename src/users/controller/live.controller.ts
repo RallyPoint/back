@@ -20,8 +20,8 @@ export class LiveController {
   @Post('publish')
   public async publish(@Body() body: NginxRtmpExternal, @Req() req: any) {
     const ip = (req.headers['x-forwarded-for'] || req.connection.remoteAddress).split(':').slice('-1')[0];
-    const live: LiveEntity = await this.liveService.getByKey(body.psk);
-    if(!live || live.user.pseudo != body.name){ throw new UnauthorizedException(); }
+    const live: LiveEntity = await this.liveService.getByKey(body.param.replace('?',''));
+    if(!live || live.user.pseudo != body.stream){ return 1; }
     setTimeout(()=>{
       this.liveService.setStatus(live.id,true,ip).then((success)=>{
         if(success){
@@ -33,15 +33,15 @@ export class LiveController {
         throw e;
       });
     }, this.DELAY_STATUS);
-    return ;
+    return 0;
   }
 
   @Post('done')
   public async done(@Body() body: NginxRtmpExternal) {
-    const user: UserEntity = await  this.userService.getByName(body.name,true);
-    if(!user){ throw new UnauthorizedException(); }
+    const live: LiveEntity = await this.liveService.getByKey(body.param.replace('?',''));
+    if(!live){ return 1; }
     setTimeout(()=>{
-      return this.liveService.setStatus(user.live.id,false).then((success)=>{
+      return this.liveService.setStatus(live.id,false).then((success)=>{
         if(success){
           return {};
         }else{
@@ -49,15 +49,24 @@ export class LiveController {
         }
       }).catch((e) => {throw e;});
     }, this.DELAY_STATUS);
+    return 0;
   }
 
   @Post('record')
   public async record(@Body() body: INginxRtmpRecordNotification) {
-    const pseudo: string = body.name.split('_').slice(0,-1 ).join('_');
+    console.log(body);
+    const pseudo: string = body.stream;
     const user: UserEntity = await this.userService.getByName(pseudo, true);
     if(!user){ throw new UnauthorizedException(); }
-    this.replayService.create(user.live.title,user.live.desc,user,user.live.catLevel,user.live.catLanguage,body.path)
+    this.replayService.create(
+        user.live.title,
+        user.live.desc,
+        user,
+        user.live.catLevel,
+        user.live.catLanguage,
+        body.file.split('/').slice(-1)[0])
         .catch((e) => { throw e; } );
+    return 0;
   }
 
 

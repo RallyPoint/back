@@ -65,7 +65,7 @@ export class ReplayService {
     });
   }
 
-  public async create(title: string,desc: string,user: UserEntity, catLevel: CategorieLiveEntity, catLanguage: CategorieLiveEntity,path:string): Promise<ReplayEntity>{
+  public async create(title: string,desc: string,user: UserEntity, catLevel: CategorieLiveEntity, catLanguage: CategorieLiveEntity,file:string): Promise<ReplayEntity>{
     return this.replayRepository.save(new ReplayEntity({
       title,
       desc,
@@ -73,8 +73,9 @@ export class ReplayService {
       user,
       catLevel,
       catLanguage,
-      path,
-      status: false
+      path: file,
+      file,
+      status: true
     }))
   }
 }
