@@ -3,7 +3,6 @@ import {UserEntity} from "../entity/user.entity";
 import {LiveEntity} from "../entity/live.entity";
 import {UserService} from "./user.service";
 import {InjectRepository} from "@nestjs/typeorm";
-import {UserFollowEntity} from "../entity/user-follow.entity";
 import {LiveService} from "./live.service";
 import {Repository} from "typeorm";
 
@@ -12,27 +11,28 @@ export class FollowService {
 
     constructor(private readonly userService: UserService,
                 private readonly liveService: LiveService,
-                @InjectRepository(UserFollowEntity) private userFollowRepository: Repository<UserFollowEntity>){}
+                @InjectRepository(UserEntity) private userRepository: Repository<UserEntity>){}
 
     public async follow(followed: string, follower: string):Promise<UserEntity>{
         const userFollowed : UserEntity = await this.userService.getById(followed,true);
-        return this.userFollowRepository.save({
-            follower: new UserEntity({id:follower}),
-            followed: userFollowed
-        }).then(()=>userFollowed);
+        this.userRepository.createQueryBuilder()
+            .relation(UserEntity,'followed')
+            .of(followed)
+            .add(follower);
+        return userFollowed;
     }
     public async unFollow(followed: string, follower: string):Promise<boolean>{
-        return this.userFollowRepository.delete({
-            follower: new UserEntity({id:follower}),
-            followed: new UserEntity({id:followed})
-        }).then(()=>true);
+        return this.userRepository.createQueryBuilder()
+            .relation(UserEntity,'followed')
+            .of(followed)
+            .remove(follower).then(()=>true);
     }
 
     public async getFollowedOf(user: string): Promise<UserEntity[]> {
-        return this.userFollowRepository.find({where: {follower: user}, relations : ['followed','followed.live']})
-            .then((usersFollow)=>{
-                return usersFollow.map((userFollow)=>userFollow.followed);
+        return this.userRepository.findOne({where: {id: user}, relations : ['followed','followed.live']})
+            .then((user)=>{
+                return user.followed;
             });
     }
-}
 
+}

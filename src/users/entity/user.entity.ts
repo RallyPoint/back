@@ -1,7 +1,7 @@
 import {
     Entity,
-    Column,
-    ManyToMany, OneToOne, JoinColumn, Index, JoinTable,
+    Column, OneToMany,
+    ManyToMany, OneToOne, JoinColumn, Index, JoinTable, ManyToOne,
 } from 'typeorm';
 import { BaseEntity } from '../../share/entity/base.entity';
 import {SSO_TYPE, USER_ROLE} from "../../auth/constants";
@@ -42,17 +42,19 @@ export class UserEntity extends BaseEntity<UserEntity> {
     @Index()
     @Column({type: 'varchar', length: 32, default:null, nullable: true})
     pendingPassword: string;
-    @ManyToMany(type => UserEntity)
+
+    @ManyToMany(type => UserEntity, user => user.follower)
     @JoinTable()
-    followeds: UserEntity[];
-    @ManyToMany(type => UserEntity)
-    @JoinTable()
-    followers: UserEntity[];
+    followed: UserEntity[];
+
+    @ManyToMany(type => UserEntity, user => user.followed)
+    follower: UserEntity[];
+
     @OneToOne(type => LiveEntity)
     @JoinColumn()
     live: LiveEntity;
-    @ManyToMany(type => ReplayEntity)
+    @OneToMany(type => ReplayEntity, replay => replay.user)
     @JoinColumn()
-    replay: ReplayEntity;
+    replay: ReplayEntity[];
 
 }

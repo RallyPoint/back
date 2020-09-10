@@ -10,7 +10,6 @@ import { CategorieLiveEntity } from "./entity/categorie-live.entity";
 import { LiveController } from "./controller/live.controller";
 import { LiveEntity } from "./entity/live.entity";
 import { FollowController } from "./controller/follow.controller";
-import {UserFollowEntity} from "./entity/user-follow.entity";
 import {FollowService} from "./service/follow.service";
 import {CategorieService} from "./service/categorie.service";
 import {CategorieController} from "./controller/categorie.controller";
@@ -20,7 +19,7 @@ import {ReplayController} from "./controller/replay.controller";
 import {SearchController} from "./controller/search.controller";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity, LiveEntity, CategorieLiveEntity, UserFollowEntity,ReplayEntity]), EmailModule,
+  imports: [TypeOrmModule.forFeature([UserEntity, LiveEntity, CategorieLiveEntity, ReplayEntity]), EmailModule,
     HttpModule],
   controllers: [UserController, LiveController, LivesController, FollowController, CategorieController, ReplayController, SearchController],
   providers: [UserService, LiveService, FollowService, CategorieService, ReplayService],
