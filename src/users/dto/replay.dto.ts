@@ -5,6 +5,7 @@ import {UserResponseDto} from "./user.dto";
 export class ReplayResponseDto {
   constructor(data: ReplayResponseDto) {
     Object.assign(this, data);
+    this.user = new UserResponseDto(this.user);
   }
   @Expose()
   id: string;
