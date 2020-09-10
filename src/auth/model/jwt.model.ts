@@ -8,8 +8,9 @@ export class JwtModel {
     public id: string;
     public sso: SSO_TYPE;
     public roles : USER_ROLE[];
+    public color: string;
 
-    constructor(model: { id: string; pseudo: string; email: string; sso: SSO_TYPE, roles: USER_ROLE[] }){
+    constructor(model: { id: string; pseudo: string; email: string; sso: SSO_TYPE, roles: USER_ROLE[], color : string}){
         Object.assign(<any>this,{roles : [USER_ROLE.USER]},model);
     }
 

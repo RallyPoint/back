@@ -34,7 +34,7 @@ export class SearchController {
   public async list(@Query('title') title: string,
                     @Query('language') language: string,
                     @Query('level') level: string): Promise<any>{
-    const lives : Promise<LiveResponseDto[]> = this.liveService.getLiveOn(language,level,title).then((lives: LiveEntity[])=>{
+    const lives : Promise<LiveResponseDto[]> = this.liveService.getLives(language,level,title).then((lives: LiveEntity[])=>{
       return lives.map((live)=>new LiveResponseDto(live));
     });
     const replay: Promise<ReplayResponseDto[]> = this.replayService.getReplay(language,level,title).then((replays: ReplayEntity[])=>{
@@ -46,9 +46,26 @@ export class SearchController {
     }
   }
 
+  @Get("/users")
+  public async users(@Query('pseudo') pseudo: string,
+                     @Query('title') title: string,
+                     @Query('language') language: string,
+                     @Query('level') level: string,
+                     @Query('pageIndex') pageIndex: number = 0,
+                     @Query('pageSize') pageSize: number = 10): Promise<any>{
+    if(pageSize > 50 ){ pageSize = 50; }
+    return {
+      index: pageIndex,
+      count: await this.userService.countUsers(language,level,title, pseudo, null,pageIndex*pageSize,pageSize),
+      items : await this.userService.getUsers(language,level,title, pseudo, null,pageIndex*pageSize,pageSize).then((users: UserEntity[])=>{
+        return users.map((user)=>new UserResponseDto(user));
+      })
+    };
+  }
+
   @Get("/replays")
   public async replays(@Query('title') title: string,
-                    @Query('language') language: string,
+                       @Query('language') language: string,
                        @Query('level') level: string,
                        @Query('pageIndex') pageIndex: number = 0,
                        @Query('pageSize') pageSize: number = 10): Promise<any>{
@@ -66,13 +83,15 @@ export class SearchController {
   public async lives(@Query('title') title: string,
                      @Query('language') language: string,
                      @Query('level') level: string,
+                     @Query('status') status: number,
                      @Query('pageIndex') pageIndex: number = 0,
                      @Query('pageSize') pageSize: number = 10): Promise<any>{
+    const statusBool = status === undefined? null:status==1
     if(pageSize > 50 ){ pageSize = 50; }
     return {
       index : pageIndex,
-      count : await this.liveService.countLiveOn(language,level,title,pageIndex*pageSize,pageSize),
-      items : await this.liveService.getLiveOn(language,level,title,pageIndex*pageSize,pageSize).then((lives: LiveEntity[])=>{
+      count : await this.liveService.countLives(language,level,title,statusBool,pageIndex*pageSize,pageSize),
+      items : await this.liveService.getLives(language,level,title, statusBool,pageIndex*pageSize,pageSize).then((lives: LiveEntity[])=>{
         return lives.map((live)=>new LiveResponseDto(live));
       })
     };

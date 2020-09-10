@@ -2,7 +2,7 @@
 import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../entity/user.entity';
-import {getConnection, Repository} from 'typeorm';
+import {getConnection, Raw, Repository} from 'typeorm';
 import {StringTools} from "../../share/tools/string-tools";
 import {SSO_TYPE, USER_ROLE} from "../../auth/constants";
 import * as bcrypt from "bcrypt";
@@ -155,5 +155,38 @@ export class UserService {
     return Object.assign({}, userEntity, data);
   }
 
+  public async countUsers(language?: string, level?: string, title?: string, pseudo?: string, status: boolean = null, skip:number = 0, take:number = 20): Promise<number>{
+    let query = this.usersRepository.createQueryBuilder("user")
+        .innerJoinAndSelect("user.live", "live");
+    if(pseudo){ query = query.where('user.pseudo LIKE :pseudo', {pseudo : `%${pseudo}%`}); }
+    if(status){ query = query.where('live.status= :status', {status}); }
+    if(language){
+      query = query.innerJoinAndSelect("live.catLanguage", "catLanguage")
+          .where('catLanguage.id = :language', {language});
+    }
+    if(level){
+      query = query.innerJoinAndSelect("live.catLevel", "catLevel")
+          .where('catLevel.id = :level', {level});
+    }
+    if(title){ query = query.where('live.title = :title', {title}); }
+    return await query.getCount();
+  }
+
+  public async getUsers(language?: string, level?: string, title?: string, pseudo?: string, status: boolean = null, skip:number = 0, take:number = 20): Promise<UserEntity[]>{
+    let query = this.usersRepository.createQueryBuilder("user")
+        .innerJoinAndSelect("user.live", "live");
+    if(pseudo){ query = query.where('user.pseudo LIKE :pseudo', {pseudo : `%${pseudo}%`}); }
+    if(status){ query = query.where('live.status= :status', {status}); }
+    if(language){
+      query = query.innerJoinAndSelect("live.catLanguage", "catLanguage")
+          .where('catLanguage.id = :language', {language});
+    }
+    if(level){
+      query = query.innerJoinAndSelect("live.catLevel", "catLevel")
+        .where('catLevel.id = :level', {level});
+    }
+    if(title){ query = query.where('live.title = :title', {title}); }
+    return await query.take(take).skip(skip).getMany();
+  }
 }
 

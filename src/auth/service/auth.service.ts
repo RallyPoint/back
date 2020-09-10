@@ -1,4 +1,3 @@
-
 import { Injectable } from '@nestjs/common';
 import { UserService } from '../../users/service/user.service';
 import { JwtService } from '@nestjs/jwt';
@@ -30,7 +29,8 @@ export class AuthService {
       email: user.email,
       id: user.id,
       sso: user.sso,
-      roles: user.roles
+      roles: user.roles,
+      color : Math.floor(Math.random()*16777215).toString(16)
     }).toJson());
   }
 
