@@ -22,5 +22,12 @@ export class EmailUserService {
             this.tempalteService.getHTML('reset-password',data)
         ).then(()=>true);
     }
+
+    notificationLive(emailInfo: IEmailInfo, data : { title : string, pseudo: string, avatar: string, liveThumb: string}): Promise<boolean> {
+        return this.emailService.sendMail(
+            { Subject: `${data.pseudo} vient de lancer son live : ${data.title}`, ...emailInfo},
+            this.tempalteService.getHTML('notification',data)
+        ).then(()=>true);
+    }
 }
 

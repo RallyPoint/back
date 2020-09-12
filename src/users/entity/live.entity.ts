@@ -18,6 +18,8 @@ export class LiveEntity extends BaseEntity<LiveEntity> {
     status: boolean;
     @Column({ type: 'datetime',default:null, nullable: true})
     date: Date;
+    @Column({ type: 'datetime',default:null, nullable: true})
+    lastSendMail: Date;
     @Column({ type: 'text',default:null, nullable: true})
     desc: string;
     @ManyToOne(type => CategorieLiveEntity, cat => cat.lives)

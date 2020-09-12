@@ -1,17 +1,20 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
-import {Like, Raw, Repository} from "typeorm";
+import { Raw, Repository} from "typeorm";
 import {LiveEntity} from "../entity/live.entity";
 import {CategorieLiveEntity} from "../entity/categorie-live.entity";
 import {StringTools} from "../../share/tools/string-tools";
+import {EmailUserService} from "../../email/sevices/email-user.service";
 import {UserEntity} from "../entity/user.entity";
 
 @Injectable()
 export class LiveService {
 
   constructor(
+      private readonly emailUserService: EmailUserService,
       @InjectRepository(LiveEntity) private liveRepository: Repository<LiveEntity>,
-  @InjectRepository(CategorieLiveEntity) private categorieLiveRepository: Repository<CategorieLiveEntity>,
+      @InjectRepository(UserEntity) private userRepository: Repository<UserEntity>,
+      @InjectRepository(CategorieLiveEntity) private categorieLiveRepository: Repository<CategorieLiveEntity>,
   ) { }
 
   public getById(id : string): Promise<LiveEntity> {
@@ -78,6 +81,27 @@ export class LiveService {
       desc: data.desc,
       catLanguage: language
     }).then(()=>true);
+  }
+
+  public async sendNotification(live: LiveEntity): Promise<void>{
+    this.userRepository.findOne({ id: live.user.id},{relations: ['follower']})
+        .then((user)=>{
+      user.follower.forEach((follower)=>{
+        this.emailUserService.notificationLive({
+          To:[{
+            Email: follower.email,
+            Name: follower.pseudo
+          }]
+        }, {
+          title : live.title,
+          pseudo : user.pseudo,
+          avatar : user.avatar,
+          liveThumb : live.thumb
+        });
+      });
+      this.liveRepository.update(live.id,{lastSendMail:new Date()});
+    });
+    return;
   }
 }
 

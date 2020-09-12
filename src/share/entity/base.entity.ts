@@ -14,5 +14,5 @@ export abstract class BaseEntity<T> {
     createdAt: Date;
 
     @UpdateDateColumn()
-    updatedAt: string;
+    updatedAt: Date;
 }
