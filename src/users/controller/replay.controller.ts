@@ -1,5 +1,5 @@
 
-import {Body, Controller, Get, NotFoundException, Param, Post, Put, UnauthorizedException} from '@nestjs/common';
+import {Body, Controller, Get, NotFoundException, Param, Post, Put, Query, UnauthorizedException} from '@nestjs/common';
 import {LiveService} from "../service/live.service";
 import {UserService} from "../service/user.service";
 import {UserEntity} from "../entity/user.entity";
@@ -17,9 +17,9 @@ export class ReplayController {
               protected readonly userService: UserService) {}
 
   @Get("/")
-  public async list(@Param('language') language: string,
-                    @Param('level') level: string,
-                    @Param('userId') userId: string): Promise<any>{
+  public async list(@Query('language') language: string,
+                    @Query('level') level: string,
+                    @Query('userId') userId: string): Promise<ReplayResponseDto[]>{
     return this.replayService.getList(userId,language,level).then((replays: ReplayEntity[])=>{
       return replays.map((replay)=>new ReplayResponseDto(replay));
     });

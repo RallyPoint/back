@@ -23,7 +23,6 @@ export class ChatService {
         return await this.chatBanRepository.save({channel,userId,status:true})
             .then(()=>true)
             .catch((e)=>{
-                console.error(e);
                 return false;
             });
     }
