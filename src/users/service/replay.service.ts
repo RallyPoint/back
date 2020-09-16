@@ -48,20 +48,22 @@ export class ReplayService {
       relations : ['user','catLanguage','catLevel']
     });
   }
-  public countReplay(language?: string, level?: string, title?: string, skip:number = 0, take:number = 20): Promise<number>{
+  public countReplay(language?: string, level?: string, title?: string, userId?: string, skip:number = 0, take:number = 20): Promise<number>{
     return this.replayRepository.count({
       where : {
         status: true,
+        ...(userId?{user: userId} : {}),
         ...(language?{catLanguage: language} : {}),
         ...(level?{catLevel: level} : {}),
         ...(title?{title:Raw( alias => `LOWER(${alias}) Like '%${title.toLowerCase()}%'`)}:{})
       }
     });
   }
-  public getReplay(language?: string, level?: string, title?: string, skip:number = 0, take:number = 20): Promise<ReplayEntity[]>{
+  public getReplay(language?: string, level?: string, title?: string, userId?: string, skip:number = 0, take:number = 20): Promise<ReplayEntity[]>{
     return this.replayRepository.find({
       where : {
         status: true,
+        ...(userId?{user: userId} : {}),
         ...(language?{catLanguage: language} : {}),
         ...(level?{catLevel: level} : {}),
         ...(title?{title:Raw( alias => `LOWER(${alias}) Like '%${title.toLowerCase()}%'`)}:{})

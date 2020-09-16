@@ -65,15 +65,17 @@ export class SearchController {
 
   @Get("/replays")
   public async replays(@Query('title') title: string,
+                       @Query('user') userPseudo: string,
                        @Query('language') language: string,
                        @Query('level') level: string,
                        @Query('pageIndex') pageIndex: number = 0,
                        @Query('pageSize') pageSize: number = 10): Promise<any>{
     if(pageSize > 50 ){ pageSize = 50; }
+    const user: UserEntity = await this.userService.getByName(userPseudo);
     return {
       index: pageIndex,
-      count: await this.replayService.countReplay(language,level,title,pageIndex*pageSize,pageSize),
-      items : await this.replayService.getReplay(language,level,title,pageIndex*pageSize,pageSize).then((replays: ReplayEntity[])=>{
+      count: await this.replayService.countReplay(language,level,title, user.id,pageIndex*pageSize,pageSize),
+      items : await this.replayService.getReplay(language,level,title, user.id,pageIndex*pageSize,pageSize).then((replays: ReplayEntity[])=>{
         return replays.map((replay)=>new ReplayResponseDto(replay));
       })
     };
