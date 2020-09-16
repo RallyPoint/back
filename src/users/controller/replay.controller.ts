@@ -54,7 +54,6 @@ export class ReplayController {
   public async delete(@Param('replayId') replayId: string,
                       @JwtPayload() jwtPayload: JwtModel){
     const replay: ReplayEntity = await this.replayService.getById(replayId,true);
-    console.log(replay);
     if(replay.user.id !== jwtPayload.id){ throw new UnauthorizedException(); }
     return this.replayService.delete(replay);
   }
@@ -85,7 +84,7 @@ export class ReplayController {
       throw new NotFoundException();
     }
     if (replay.user.id !== jwtPayload.id) {
-      throw  new UnauthorizedException();
+      throw  new UnauthorizedException({replay,jwtPayload});
     }
     const data = {
       title: body.title,
