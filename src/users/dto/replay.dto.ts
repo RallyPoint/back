@@ -1,5 +1,6 @@
 import {Exclude, Expose, Type} from "class-transformer";
 import {UserResponseDto} from "./user.dto";
+import {IsDate, IsNotEmpty, MaxLength, MinLength} from "class-validator";
 
 @Exclude()
 export class ReplayResponseDto {
@@ -20,8 +21,22 @@ export class ReplayResponseDto {
   @Expose()
   title: string;
   @Expose()
+  thumb: string;
+  @Expose()
   file: string;
   @Expose()
   @Type(()=>UserResponseDto)
   user?: UserResponseDto
+}
+export class ReplayPutDto {
+  @IsNotEmpty()
+  @MaxLength(50)
+  @MinLength(10)
+  title: string;
+  @MaxLength(500)
+  desc: string;
+  @IsNotEmpty()
+  category: string;
+  @IsNotEmpty()
+  language: string;
 }

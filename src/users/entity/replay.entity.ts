@@ -18,9 +18,8 @@ export class ReplayEntity extends BaseEntity<ReplayEntity> {
     desc: string;
     @Column({ type: 'datetime',default:null, nullable: true})
     date: Date;
-    @Index()
-    @Column({ type: 'varchar', length: 128, default:null, nullable: true })
-    convertId: string;
+    @Column({ type: 'varchar', length: 128, default:"", nullable: true })
+    thumb: string;
     @Column({ type: 'int',default:null, nullable: true })
     duration: number;
     @Column({ type: 'boolean', default: false})

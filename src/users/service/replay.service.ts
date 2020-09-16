@@ -5,6 +5,9 @@ import {Like, Raw, Repository} from "typeorm";
 import {CategorieLiveEntity} from "../entity/categorie-live.entity";
 import {ReplayEntity} from "../entity/replay.entity";
 import {UserEntity} from "../entity/user.entity";
+import * as fs from "fs";
+import * as config from 'config';
+
 
 @Injectable()
 export class ReplayService {
@@ -23,6 +26,10 @@ export class ReplayService {
       },
       relations : relations
     });
+  }
+  public async delete(replay: ReplayEntity): Promise<void>{
+    await this.replayRepository.delete(replay.id);
+    fs.unlinkSync(config.get('fs.replay')+"/"+replay.user.pseudo+"/"+replay.file);
   }
 
   public changeStatus(id: string,status: boolean): Promise<boolean> {
@@ -78,5 +85,21 @@ export class ReplayService {
       status: true
     }))
   }
+
+  public async update(liveId: string, data : {title: string, level: string, desc: string, thumb: string, language: string}): Promise<boolean> {
+    const level: CategorieLiveEntity = await this.categorieLiveRepository.findOne(data.level);
+    const language: CategorieLiveEntity = await this.categorieLiveRepository.findOne(data.language);
+    if(!level || !language){
+      throw new NotFoundException();
+    }
+    return this.replayRepository.update(liveId,{
+      title: data.title,
+      catLevel: level,
+      thumb: data.thumb,
+      desc: data.desc,
+      catLanguage: language
+    }).then(()=>true);
+  }
+
 }
 
