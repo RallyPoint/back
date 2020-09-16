@@ -95,7 +95,7 @@ export class ReplayController {
     };
     if (files && files[0]) {
       sharp(files[0].buffer).jpeg().toFile(config.get('fs.replayThumb')+'/'+replay.user.pseudo+'/'+replay.id+'.jpg');
-      data.thumb = replay.id+'.jpg';
+      data.thumb = '/media/hls/replay/'+replay.user.pseudo+'/'+replay.id+'.jpg';
     }
     this.replayService.update(replay.id, data);
     return new ReplayResponseDto(Object.assign(replay,data));
