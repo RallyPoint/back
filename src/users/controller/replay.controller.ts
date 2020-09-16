@@ -20,11 +20,7 @@ import {JwtPayload} from "../../auth/decorator/jwt-payload.decorator";
 import {JwtModel} from "../../auth/model/jwt.model";
 import {FilesInterceptor} from "@nestjs/platform-express";
 import {diskStorage, memoryStorage} from "multer";
-import {extname} from "path";
 import * as config from 'config';
-import {livePutDto} from "../dto/live.dto";
-import {UserFullResponseDto} from "../dto/user.dto";
-import {UserEntity} from "../entity/user.entity";
 import * as fs from "fs";
 import * as sharp from "sharp";
 
