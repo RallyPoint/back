@@ -17,5 +17,9 @@ export class CategorieService {
   public getByType(type: CATEGORIE_TYPE): Promise<CategorieLiveEntity[]> {
     return this.categorieRepository.find({where:{type:type}});
   }
+
+  public getById(id: string): Promise<CategorieLiveEntity>{
+    return this.categorieRepository.findOne(id);
+  }
 }
 

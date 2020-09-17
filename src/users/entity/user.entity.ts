@@ -7,6 +7,7 @@ import { BaseEntity } from '../../share/entity/base.entity';
 import {SSO_TYPE, USER_ROLE} from "../../auth/constants";
 import {LiveEntity} from "./live.entity";
 import {ReplayEntity} from "./replay.entity";
+import {CalendarEntity} from "./calendar.entity";
 
 @Entity()
 export class UserEntity extends BaseEntity<UserEntity> {
@@ -56,5 +57,9 @@ export class UserEntity extends BaseEntity<UserEntity> {
     @OneToMany(type => ReplayEntity, replay => replay.user)
     @JoinColumn()
     replay: ReplayEntity[];
+
+    @OneToMany(type => CalendarEntity, calendar => calendar.user)
+    calendar: CalendarEntity[];
+
 
 }
