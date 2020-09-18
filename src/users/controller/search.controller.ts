@@ -108,7 +108,7 @@ export class SearchController {
   }
 
   @Get("/calendar")
-  public async calendar(@Query('userId') userId: string): Promise<any>{
-    return this.calendarService.getListOfUser(userId);
+  public async calendar(@Query('userId') userId: string,@Query('withUser') withUser : number): Promise<any>{
+    return this.calendarService.getListOfUser(userId, withUser == 1);
   }
 }

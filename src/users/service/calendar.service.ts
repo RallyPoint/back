@@ -2,7 +2,7 @@
 import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../entity/user.entity';
-import {getConnection, Raw, Repository} from 'typeorm';
+import {getConnection, MoreThan, Raw, Repository} from 'typeorm';
 import {CalendarEntity} from "../entity/calendar.entity";
 import {CategorieService} from "./categorie.service";
 import {CategorieLiveEntity} from "../entity/categorie-live.entity";
@@ -17,12 +17,22 @@ export class CalendarService {
 
   public getById(id : string, withRelation: boolean): Promise<CalendarEntity>{
     return this.calendarRepository.findOne(id,{
-      ...(withRelation?{relations:['user']}:{})
+      ...(withRelation?{relations:['user']}:{}),
+      where : {
+        start : MoreThan(Date.now()),
+      },
+      order: {start : "ASC"}
     });
   }
 
-  public getListOfUser(userId: string): Promise<CalendarEntity[]> {
-    return this.calendarRepository.find({where : {user: userId}, relations: ['catLanguage','catLevel']});
+  public getListOfUser(userId?: string, withUser?: boolean): Promise<CalendarEntity[]> {
+    return this.calendarRepository.find({
+      where : {
+        ...(userId ? {user: userId}: {}),
+        start: MoreThan(Date.now())
+      },
+      relations: ['catLanguage','catLevel',...(withUser?['user']:[])]
+    });
   }
 
   public async create(title: string, desc: string, start: Date, end: Date, level: string, language: string, user: UserEntity) : Promise<void> {
