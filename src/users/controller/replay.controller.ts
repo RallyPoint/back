@@ -29,15 +29,6 @@ export class ReplayController {
   constructor(protected readonly replayService: ReplayService,
               protected readonly userService: UserService) {}
 
-  @Get("/")
-  public async list(@Query('language') language: string,
-                    @Query('level') level: string,
-                    @Query('userId') userId: string): Promise<ReplayResponseDto[]>{
-    return this.replayService.getList(userId,language,level).then((replays: ReplayEntity[])=>{
-      return replays.map((replay)=>new ReplayResponseDto(replay));
-    });
-  }
-
   @Get('/:replayId')
   public async get(@Param('replayId') replayId: string): Promise<ReplayResponseDto> {
     const replay: ReplayEntity = await this.replayService.getById(replayId, true);

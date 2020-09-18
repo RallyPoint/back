@@ -74,10 +74,13 @@ export class SearchController {
                        @Query('pageIndex') pageIndex: number = 0,
                        @Query('pageSize') pageSize: number = 10): Promise<PageResponseDto<ReplayResponseDto>>{
     if(pageSize > 50 ){ pageSize = 50; }
-    const user: UserEntity = await this.userService.getByName(userPseudo);
-
-    const count: number = await this.replayService.countReplay(language,level,title, user.id,pageIndex*pageSize,pageSize);
-    const items : ReplayEntity[] = count ? await this.replayService.getReplay(language,level,title, user.id,pageIndex*pageSize,pageSize) : [];
+    let user: UserEntity;
+    if(userPseudo) {
+      user = await this.userService.getByName(userPseudo);
+      if(!user){ return new PageResponseDto([],0,0); }
+    }
+    const count: number = await this.replayService.countReplay(language,level,title, user ? user.id : null,pageIndex*pageSize,pageSize);
+    const items : ReplayEntity[] = count ? await this.replayService.getReplay(language,level,title, user ? user.id : null,pageIndex*pageSize,pageSize) : [];
     return new PageResponseDto(
         items.map((replay)=>new ReplayResponseDto(replay)),
         count,

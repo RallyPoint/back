@@ -41,6 +41,7 @@ export class LiveService {
         ...(title?{title:Raw( alias => `LOWER(${alias}) Like '%${title.toLowerCase()}%'`)}:{})
       },
       relations : ['user','catLanguage','catLevel'],
+      order : {status:'DESC'},
       take: take,
       skip: skip
     });
