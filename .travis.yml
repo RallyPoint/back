@@ -20,6 +20,7 @@ jobs:
         - docker images
         - docker push $DOCKER_USERNAME/$DOCKER_IMAGE:$TRAVIS_COMMIT
     - stage: deploy
+      if: branch = master
       install:
         - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
         - chmod +x ./kubectl
