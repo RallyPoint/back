@@ -17,7 +17,7 @@ import {ReplayEntity} from "../entity/replay.entity";
 import {Roles} from "../../auth/decorator/roles.decorator";
 import {USER_ROLE} from "../../auth/constants";
 import {JwtPayload} from "../../auth/decorator/jwt-payload.decorator";
-import {JwtModel} from "../../auth/model/jwt.model";
+import {AccessTokenModel} from "../../auth/model/access-token.model";
 import {FilesInterceptor} from "@nestjs/platform-express";
 import {diskStorage, memoryStorage} from "multer";
 import * as config from 'config';
@@ -39,7 +39,7 @@ export class ReplayController {
   @Delete('/:replayId')
   @Roles([USER_ROLE.USER])
   public async delete(@Param('replayId') replayId: string,
-                      @JwtPayload() jwtPayload: JwtModel){
+                      @JwtPayload() jwtPayload: AccessTokenModel){
     const replay: ReplayEntity = await this.replayService.getById(replayId,true);
     if(replay.user.id !== jwtPayload.id){ throw new UnauthorizedException(); }
     return this.replayService.delete(replay);
@@ -64,7 +64,7 @@ export class ReplayController {
   ))
   public async update(@Body() body: ReplayPutDto,
                       @UploadedFiles() files,
-                      @JwtPayload() jwtPayload: JwtModel,
+                      @JwtPayload() jwtPayload: AccessTokenModel,
                       @Param('replayId') replayId: string): Promise<ReplayResponseDto> {
     const replay: ReplayEntity = await this.replayService.getById(replayId, true);
     if (!replay) {

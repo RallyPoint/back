@@ -1,4 +1,4 @@
-import {IsNotEmpty, IsEmail, Matches, IsString, IsOptional, MaxLength, MinLength} from 'class-validator';
+import {IsNotEmpty, IsEmail, Matches, IsString, IsOptional, MaxLength} from 'class-validator';
 import {Exclude, Expose, Type} from "class-transformer";
 import {SSO_TYPE, USER_ROLE} from "../../auth/constants";
 import {LiveFullResponseDto, LiveResponseDto} from "./live.dto";
@@ -13,11 +13,6 @@ export class UserDto {
   pseudo: string;
 }
 
-export class CreateUserDto extends UserDto {
-  @IsNotEmpty()
-  @Matches(/^(?=.*[A-z])(?=.*[0-9])\S{6,99}$/)
-  password: string;
-}
 
 export class VerifiedEmailDto {
   @IsNotEmpty()

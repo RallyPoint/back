@@ -4,10 +4,10 @@ import {
   Get,
   HttpException,
   HttpStatus,
-  Post, UnauthorizedException
+  Post, Req, UnauthorizedException
 } from '@nestjs/common';
 import {AuthService} from '../service/auth.service';
-import {CreateUserDto, UserResponseDto} from '../../users/dto/user.dto';
+import {CreateUserDto, UserResponseDto} from '../dto/user.dto';
 import {GithubService} from "../service/github.service";
 import {UserService} from "../../users/service/user.service";
 import {UserEntity} from "../../users/entity/user.entity";
@@ -16,8 +16,10 @@ import {LoginDto} from "../dto/loginDto";
 import {githubDto} from "../dto/githubDto";
 import {ResetPasswordDto} from "../dto/ResetPasswordDto";
 import {AuthentificationResponseDto} from "../dto/CreateUserResponseDto";
-import {JwtModel} from "../model/jwt.model";
+import {AccessTokenModel} from "../model/access-token.model";
 import {JwtPayload} from "../decorator/jwt-payload.decorator";
+import {RefreshTokenPostDTO} from "../dto/refresh-token";
+import {RefreshTokenModel} from "../model/refresh-token.model";
 
 @Controller('auth')
 export class AuthController {
@@ -30,7 +32,7 @@ export class AuthController {
   }
 
   @Post('github-login')
-  public async githubLogin(@Body() body: githubDto): Promise<AuthentificationResponseDto>{
+  public async githubLogin(@Body() body: githubDto, @Req() req: any): Promise<AuthentificationResponseDto>{
     let data = await this.githubService.getUser(body.code);
     let user: UserEntity;
     try {
@@ -58,24 +60,29 @@ export class AuthController {
         );
       }
     }
+    const ip = (req.headers['x-forwarded-for'] || req.connection.remoteAddress).split(':').slice('-1')[0];
     return new AuthentificationResponseDto({
       user: user,
-      access_token: this.authService.generateToken(user)
+      accessToken: this.authService.generateAccessToken(user),
+      refreshToken: this.authService.generateRefreshToken(user, ip)
     });
   }
 
 
   @Post('login')
-  async login(@Body() body: LoginDto): Promise<AuthentificationResponseDto> {
+  async login(@Body() body: LoginDto, @Req() req: any): Promise<AuthentificationResponseDto> {
+    const ip = (req.headers['x-forwarded-for'] || req.connection.remoteAddress).split(':').slice('-1')[0];
     const user: UserEntity =  await this.authService.validateUser(body.email,body.password);
     return new AuthentificationResponseDto({
       user: user,
-      access_token: this.authService.generateToken(user)
+      accessToken: this.authService.generateAccessToken(user),
+      refreshToken: this.authService.generateRefreshToken(user, ip)
     });
   }
 
   @Post('register')
-  async register(@Body() data: CreateUserDto): Promise<AuthentificationResponseDto> {
+  async register(@Body() data: CreateUserDto, @Req() req: any): Promise<AuthentificationResponseDto> {
+    const ip = (req.headers['x-forwarded-for'] || req.connection.remoteAddress).split(':').slice('-1')[0];
     const user: UserEntity = await this.userService.create(
         data.email,
         data.pseudo,
@@ -86,16 +93,28 @@ export class AuthController {
     );
     return new AuthentificationResponseDto({
       user: <UserResponseDto>user,
-      access_token: this.authService.generateToken(user)
+      accessToken: this.authService.generateAccessToken(user),
+      refreshToken: this.authService.generateRefreshToken(user, ip)
     });
 
   }
+
   @Post('refresh')
-  async refresh(@JwtPayload() jwtPayload: JwtModel): Promise<AuthentificationResponseDto> {
-    const user: UserEntity = await this.userService.getById(jwtPayload.id);
+  async refresh( @Body() body : RefreshTokenPostDTO, @Req() req: any): Promise<AuthentificationResponseDto> {
+    const ip = (req.headers['x-forwarded-for'] || req.connection.remoteAddress).split(':').slice('-1')[0];
+
+    let payload: RefreshTokenModel;
+    try {
+      payload = this.authService.valideRefreshToken(body.refreshToken);
+    }catch (e) {
+      throw new UnauthorizedException();
+    }
+    const user: UserEntity = await this.userService.getById(payload.userId);
+    if (!user) { throw new UnauthorizedException(); }
     return new AuthentificationResponseDto({
       user: <UserResponseDto>user,
-      access_token: this.authService.generateToken(user)
+      accessToken: this.authService.generateAccessToken(user),
+      refreshToken: this.authService.generateRefreshToken(user, ip)
     });
   }
 }

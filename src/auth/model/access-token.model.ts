@@ -1,7 +1,7 @@
 import {SSO_TYPE, USER_ROLE} from "../constants";
 
 
-export class JwtModel {
+export class AccessTokenModel {
 
     public pseudo: string;
     public email: string;

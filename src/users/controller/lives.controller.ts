@@ -21,7 +21,7 @@ import * as config from 'config';
 import {Roles} from "../../auth/decorator/roles.decorator";
 import {USER_ROLE} from "../../auth/constants";
 import {JwtPayload} from "../../auth/decorator/jwt-payload.decorator";
-import {JwtModel} from "../../auth/model/jwt.model";
+import {AccessTokenModel} from "../../auth/model/access-token.model";
 
 @Controller('lives')
 export class LivesController {
@@ -46,7 +46,7 @@ export class LivesController {
   @Put('/:liveName/new-key')
   @Roles([USER_ROLE.USER])
   public async newKey(@Param('liveName') liveName: string,
-  @JwtPayload() jwtPayload: JwtModel): Promise<UserFullResponseDto> {
+  @JwtPayload() jwtPayload: AccessTokenModel): Promise<UserFullResponseDto> {
     const user: UserEntity = await this.userService.getByName(liveName, true);
     if(!user){ throw new NotFoundException();}
     if(user.id !== jwtPayload.id){ throw  new UnauthorizedException(); }
@@ -79,7 +79,7 @@ export class LivesController {
   ))
   public async update(@Body() body: livePutDto,
                       @UploadedFiles() files,
-                      @JwtPayload() jwtPayload: JwtModel,
+                      @JwtPayload() jwtPayload: AccessTokenModel,
                     @Param('liveName') liveName: string): Promise<UserFullResponseDto> {
     const user: UserEntity = await this.userService.getByName(liveName, true);
     if(!user){ throw new NotFoundException();}

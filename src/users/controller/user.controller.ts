@@ -12,7 +12,7 @@ import {
 } from "../dto/user.dto";
 import {UserService} from "../service/user.service";
 import {JwtPayload} from "../../auth/decorator/jwt-payload.decorator";
-import {JwtModel} from "../../auth/model/jwt.model";
+import {AccessTokenModel} from "../../auth/model/access-token.model";
 import {UserEntity} from "../entity/user.entity";
 import {USER_ROLE} from "../../auth/constants";
 import {IUserUpdate} from "../interface/user.interface";
@@ -48,7 +48,7 @@ export class UserController {
 
   @Get(':userId')
   public async get(
-      @JwtPayload() jwtPayload: JwtModel,
+      @JwtPayload() jwtPayload: AccessTokenModel,
       @Param('userId')userId: string): Promise<UserFullResponseDto | UserResponseDto>{
     const user: UserEntity = await this.userService.getById(userId,true);
     if(userId != jwtPayload.id && jwtPayload.roles.indexOf(USER_ROLE.ADMIN)===-1){
@@ -83,7 +83,7 @@ export class UserController {
   public async changeUser(
       @Body() body: UserUpdateDto,
       @Param('userId')userId: string,
-      @JwtPayload() jwtPayload: JwtModel,
+      @JwtPayload() jwtPayload: AccessTokenModel,
       @UploadedFiles() files): Promise<any>{
     if(userId != jwtPayload.id && jwtPayload.roles.indexOf(USER_ROLE.ADMIN)===-1){
       throw new UnauthorizedException();

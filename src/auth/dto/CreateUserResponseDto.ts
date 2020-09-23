@@ -13,6 +13,8 @@ export class AuthentificationResponseDto {
     @Type(()=>UserResponseDto)
     user : UserResponseDto;
     @Expose()
-    access_token: string;
+    accessToken: string;
+    @Expose()
+    refreshToken: string;
 }
 

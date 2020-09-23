@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { USER_ROLE } from '../constants';
-import {JwtModel} from "../model/jwt.model";
+import {AccessTokenModel} from "../model/access-token.model";
 
 @Injectable()
 export class GuardService implements CanActivate {
@@ -23,7 +23,7 @@ export class GuardService implements CanActivate {
         }
         const request = context.switchToHttp().getRequest();
         if(!request.jwtPayload){return false;}
-        const jwtPayload: JwtModel = new JwtModel(request.jwtPayload);
+        const jwtPayload: AccessTokenModel = new AccessTokenModel(request.jwtPayload);
         const jwtRoles = [].concat(...jwtPayload.roles.map((role) => GuardService.SUBS_ROLES[role]));
         const hasRole = () => jwtRoles.some((role) => roles.includes(role));
         const status = jwtPayload && jwtRoles && hasRole();

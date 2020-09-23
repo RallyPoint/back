@@ -3,24 +3,11 @@ import {
   Body,
   Controller, Delete, Get, NotFoundException, Param, Post, Put, UnauthorizedException, UploadedFiles, UseInterceptors
 } from '@nestjs/common';
-import {
-  ChangePasswordDto,
-  UserFullResponseDto, UserResponseDto,
-  UserUpdateDto,
-  VerifiedEmailDto,
-  VerifiedEmailResponseDto
-} from "../dto/user.dto";
+
 import {UserService} from "../service/user.service";
 import {JwtPayload} from "../../auth/decorator/jwt-payload.decorator";
-import {JwtModel} from "../../auth/model/jwt.model";
+import {AccessTokenModel} from "../../auth/model/access-token.model";
 import {UserEntity} from "../entity/user.entity";
-import {USER_ROLE} from "../../auth/constants";
-import {IUserUpdate} from "../interface/user.interface";
-import {FilesInterceptor} from "@nestjs/platform-express";
-import * as config from 'config';
-import { extname } from "path";
-import { diskStorage } from 'multer'
-import {Roles} from "../../auth/decorator/roles.decorator";
 import {CalendarService} from "../service/calendar.service";
 import {CalendarCreateDto} from "../dto/calendar.dto";
 import {CalendarEntity} from "../entity/calendar.entity";
@@ -36,7 +23,7 @@ export class CalendarController {
 
   @Post()
   public async post(
-      @JwtPayload() jwtPayload: JwtModel,
+      @JwtPayload() jwtPayload: AccessTokenModel,
       @Body() body: CalendarCreateDto
       ) : Promise<StatusReponseDto>{
     const userEntity: UserEntity = await this.userService.getById(jwtPayload.id);
@@ -54,7 +41,7 @@ export class CalendarController {
 
   @Delete(':calendarId')
   public async delete(
-      @JwtPayload() jwtPayload: JwtModel,
+      @JwtPayload() jwtPayload: AccessTokenModel,
       @Param('calendarId') calendarId: string
   ): Promise<StatusReponseDto> {
     const calendarEntity : CalendarEntity = await this.calendarService.getById(calendarId,true);
