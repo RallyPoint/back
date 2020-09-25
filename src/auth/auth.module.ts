@@ -12,6 +12,7 @@ import * as config from 'config';
 import {JwtMiddleware} from "./service/jwt.middleware";
 import {GuardService} from "./service/auth.gard";
 import {AuthServerGard} from "./service/auth-server.gard";
+import {AuthMqttController} from './controller/auth-mqtt.controller';
 
 
 @Module({
@@ -28,7 +29,7 @@ import {AuthServerGard} from "./service/auth-server.gard";
   ],
   providers: [AuthService,GithubService, JwtMiddleware, GuardService,AuthServerGard],
   exports: [AuthService, JwtMiddleware, GuardService,AuthServerGard],
-  controllers: [AuthController],
+  controllers: [AuthController,AuthMqttController],
 })
 export class AuthModule {
   configure(consumer: MiddlewareConsumer) {
