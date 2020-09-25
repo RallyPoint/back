@@ -61,7 +61,7 @@ export class UserResponseDto {
   constructor(data: UserResponseDto) {
     Object.assign(this, data);
     this.descHtml = !data.desc ? "" : (new showdown.Converter()).makeHtml(escapeHTML(data.desc));
-    if(this.desc){this.desc = "";}
+    if(!this.desc){this.desc = "";}
   }
 
   @Expose()
