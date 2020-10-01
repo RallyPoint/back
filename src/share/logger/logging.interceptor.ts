@@ -15,9 +15,9 @@ export class LoggingInterceptor implements NestInterceptor {
         return next.handle().pipe(tap((data) => {
             const res = context.switchToHttp().getResponse();
             if ((res.statusCode || 200) > 499) {
-                this.logger.crit(`Response`, res.statusCode || 200, data);
+                this.logger.crit(`Response`, res.statusCode || 200);
             } else {
-                this.logger.log(`Response`, res.statusCode || 200, data);
+                this.logger.log(`Response`, res.statusCode || 200);
             }
         }), catchError((err, caught) => {
             const res = context.switchToHttp().getResponse();

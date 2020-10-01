@@ -17,7 +17,6 @@ export class AuthMqttController {
   @HttpCode(200)
   @Post('user')
   public async user(@Body() body: any): Promise<any>{
-    console.log(body);
     // Access for private IP
     if(IP.isPrivate(body.ipaddr)){
       return ;
@@ -28,7 +27,6 @@ export class AuthMqttController {
   @HttpCode(200)
   @Post('super-user')
   public async superUser(@Body() body: any): Promise<any>{
-    console.log(body);
     // Super user for Private ip Only
     if(!IP.isPrivate(body.ipaddr)){
       throw new UnauthorizedException();
@@ -39,7 +37,6 @@ export class AuthMqttController {
   @HttpCode(200)
   @Post('acl')
   public async acl(@Body() body: any): Promise<any>{
-    console.log(body);
     // R/W for private IP
     if(IP.isPrivate(body.ipaddr)){
       return ;

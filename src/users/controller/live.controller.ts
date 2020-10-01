@@ -26,8 +26,6 @@ export class LiveController {
 
   @Post('authentification')
   public async authentification(@Body() body: StreamingServerAuthExternal): Promise<StreamingServerAuthentificationDto> {
-    console.log(body);
-
     const live: LiveEntity = await this.liveService.getByKey(body.publishStreamName);
     if(!live){ throw  new NotFoundException('Live not found');}
     return {
@@ -39,7 +37,6 @@ export class LiveController {
 
   @Post('publish')
   public async publish(@Body() body: StreamingServerPublishExternal, @Req() req: Request): Promise<void>{
-    console.log("====>publish",body);
     const ip = req.connection.remoteAddress.split(':').slice(-1)[0];
     const live: LiveEntity = await this.liveService.getByKey(body.publishMetaData.liveKey);
     setTimeout(()=>{
@@ -70,7 +67,11 @@ export class LiveController {
     }, this.DELAY_STATUS);
     return ;
   }
-
+/*
+{"method":"POST","body":
+{"publishMetaData":{"publishStreamPath":"/Maxence/","liveKey":"33NHLmQlNvTVGCgqOpLaX67DYxXproVx","pseudo":"Maxence"},
+"recordFile":"2020-10-01-14-04-04.mp4"}}
+ */
   @Post('done-record')
   public async doneRecord(@Body() body: StreamingServerDoneRecordExternal) : Promise<void> {
     const pseudo: string = body.publishMetaData.pseudo;
