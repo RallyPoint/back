@@ -45,6 +45,7 @@ export class ReplayService {
         ...(userId?{user: userId} : {})
       },
       take:20,
+      order : {createdAt:'DESC'},
       relations : ['user','catLanguage','catLevel']
     });
   }
@@ -70,6 +71,7 @@ export class ReplayService {
       },
       take: take,
       skip: skip,
+      order : {createdAt:'DESC'},
       relations : ['user','catLanguage','catLevel']
     });
   }
