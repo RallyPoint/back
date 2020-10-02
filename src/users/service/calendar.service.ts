@@ -29,7 +29,7 @@ export class CalendarService {
     return this.calendarRepository.find({
       where : {
         ...(userId ? {user: userId}: {}),
-        start: MoreThan(Date.now())
+        start: MoreThan(new Date())
       },
       relations: ['catLanguage','catLevel',...(withUser?['user']:[])]
     });
