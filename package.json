@@ -47,7 +47,7 @@
     "class-validator": "^0.11.1",
     "config": "^3.2.2",
     "date-fns": "^2.15.0",
-    "elliptic": "^6.5.3",
+    "elliptic": "^6.5.4",
     "escape-html": "^1.0.3",
     "ip": "^1.1.5",
     "jwks-rsa": "^1.8.1",
